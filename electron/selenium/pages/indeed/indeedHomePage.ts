@@ -7,22 +7,26 @@ export class IndeedHomePage extends BasePage {
     }
     override async runPageFlow(): Promise<void> {
         try {
-          await this.open();
-      
-          await this.enterSearchTerm('software');
-      
-          await this.clickFindJobs();
-        } catch (err) {
-          console.error(`runPageFlow failed: ${err}`);
-          throw err;
-        }
-      }      
+            await this.open();
 
-    async enterSearchTerm(term: string) {
-        (await this.waitForElement(By.xpath(".//input[@id='text-input-what']"))).sendKeys('software');
+            await this.enterSearchTerm('software');
+
+            await this.clickFindJobs();
+
+            await this.sleep(2000);
+        } catch (err) {
+            console.error(`runPageFlow failed: ${err}`);
+            throw err;
+        }
     }
 
-    async clickFindJobs() {
-        (await this.waitForElement(By.xpath(".//button[@type='submit']"))).click();
+    async enterSearchTerm(term: string): Promise<void> {
+        const searchBar = await this.waitForElement(By.xpath(".//input[@id='text-input-what']"));
+        await searchBar.sendKeys('software');
+    }
+
+    async clickFindJobs(): Promise<void> {
+        const submit = await this.waitForElement(By.xpath(".//button[@type='submit']"))
+        await submit.click();
     }
 }

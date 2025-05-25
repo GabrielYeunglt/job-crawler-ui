@@ -9,9 +9,11 @@ export abstract class BaseSite implements iSite {
     constructor(driver: WebDriver) {
         this.driver = driver;
     }
-    
+
     async runPages(): Promise<void> {
-        await this.pages.forEach(async page => await page.runPageFlow());
+        for (const page of this.pages) {
+            await page.runPageFlow(); // ✅ sequential, each page is fully done
+        }
     }
 
 }

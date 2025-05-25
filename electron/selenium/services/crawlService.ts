@@ -10,12 +10,11 @@ export async function runCrawl(keyword: string): Promise<string[]> {
   try {
     const indeed = new IndeedSite(driver);
     await indeed.runPages();
-    
     return ['Success'];
   } catch (error) {
     console.error('Crawler error:', error);
     return [];
   } finally {
-    // await driver.quit();
+    await driver.quit();
   }
 }

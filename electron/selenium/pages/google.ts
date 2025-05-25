@@ -8,12 +8,14 @@ export class Google extends BasePage {
     override async runPageFlow(): Promise<void> {
         await this.open();
 
-        this.waitForElement(By.xpath(".//textarea[@name='q']"))
-            .then(element => {
-                element.sendKeys("Test");
+        await this.waitForElement(By.xpath(".//textarea[@name='q']"))
+            .then(async element => {
+                await element.sendKeys("Test");
             })
-            .catch(err => console.error(err))
-            .finally();
+            .catch(err => console.error('[Google] Error in runPageFlow:', err))
+            .finally(() => {
+                console.log('Current page finished');
+            });
     }
 
 }

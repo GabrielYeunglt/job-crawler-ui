@@ -16,10 +16,21 @@ export class DriverFactory {
             options.addArguments(`--user-data-dir=${userDataDir}`);
             options.excludeSwitches('enable-automation');
             options.setUserPreferences({ useAutomationExtension: false });
+
+            const service = new chrome.ServiceBuilder()
+                .enableVerboseLogging();
+
+            builder.setChromeService(service);
             builder.setChromeOptions(options);
         }
 
-        return builder.build();
+        try {
+            console.log('[DriverFactory] Creating WebDriver...');
+            return builder.build();
+        } catch (err) {
+            console.error('[DriverFactory] WebDriver build failed:', err);
+            throw err;
+        }
     }
 }
 

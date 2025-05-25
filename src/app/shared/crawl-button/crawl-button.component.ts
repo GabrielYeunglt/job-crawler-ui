@@ -2,9 +2,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CrawlerService } from '../../services/crawler.service';
 
 @Component({
+    standalone: true,
     selector: 'app-crawl-button',
     templateUrl: './crawl-button.component.html',
-    styleUrl: './crawl-button.component.scss'
+    styleUrls: ['./crawl-button.component.scss']
 })
 export class CrawlButtonComponent {
     @Input() label: string = 'Start Crawling';
@@ -15,7 +16,6 @@ export class CrawlButtonComponent {
     @Output() clicked = new EventEmitter<void>();
 
     async onClick() {
-        console.log('click');
         this.clicked.emit();
         const results = await this.crawler.startCrawl('dev');
         console.log('Crawl Results:', results);

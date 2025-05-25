@@ -15,8 +15,6 @@ async function createWindow() {
 
     win.loadURL(`file://${path.join(__dirname, '../dist/job-crawler-ui/browser/index.html')}`);
     win.webContents.openDevTools();
-    const results = await runCrawl('yoyo');
-    console.log(results);
 }
 
 app.whenReady().then(createWindow);

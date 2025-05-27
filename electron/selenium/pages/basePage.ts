@@ -2,10 +2,12 @@ import { By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { IPage } from './iPage';
 
 export abstract class BasePage implements IPage {
+    protected siteName: string;
     protected driver: WebDriver;
     protected abstract get url(): string;
 
-    constructor(driver: WebDriver) {
+    constructor(driver: WebDriver, siteName: string = 'generic') {
+        this.siteName = siteName;
         this.driver = driver;
     }
 
@@ -15,9 +17,13 @@ export abstract class BasePage implements IPage {
     }
 
     async waitForElement(locator: By, timeout = 10000): Promise<WebElement> {
-        const el = await this.driver.wait(until.elementLocated(locator), timeout);
-        await this.driver.wait(until.elementIsVisible(el), timeout);
-        return el;
+        return await this.waitForElementSpecifyDriver(this.driver, locator, timeout);
+    }
+
+    async waitForElementSpecifyDriver(driver: WebDriver, locator: By, timeout = 10000): Promise<WebElement> {
+        await driver.wait(until.elementLocated(locator), timeout);
+        const element = await this.driver.findElement(locator);
+        return element;
     }
 
     async waitForElements(locator: By, timeout = 10000): Promise<WebElement[]> {
@@ -35,7 +41,20 @@ export abstract class BasePage implements IPage {
     abstract runPageFlow(): Promise<void>;
 
     async scrollTo(element: WebElement): Promise<void> {
-        await this.driver.executeScript("arguments[0].scrollIntoView({block: 'end'})", element);
+        try {
+            if (!await element.isDisplayed()) {
+                await this.sleep(200);
+            }
+            await this.driver.executeScript("arguments[0].scrollIntoView({block: 'end'})", element);
+        }
+        catch (err) {
+            console.error(`Cannot scroll to element: ${err}`);
+        }
+    }
+
+    async sendKey(xpath: string, key: string): Promise<void> {
+        const field = await this.waitForElement(By.xpath(xpath));
+        await field.sendKeys(key);
     }
 
     cannotFindElementMessage(name: string, err: any) {

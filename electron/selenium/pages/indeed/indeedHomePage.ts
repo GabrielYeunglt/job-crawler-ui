@@ -21,7 +21,7 @@ export class IndeedHomePage extends BasePage {
     }
 
     async enterSearchTerm(term: string): Promise<void> {
-        const searchBar = await this.waitForElement(By.xpath(".//input[@id='text-input-what']"));
+        const searchBar = await this.waitForElement(By.xpath(".//input[@id='text-input-what']"), 30000);
         await searchBar.sendKeys('software');
     }
 

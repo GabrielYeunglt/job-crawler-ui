@@ -1,6 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { runCrawl } from './selenium/services/crawlService';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 async function createWindow() {
     const win = new BrowserWindow({

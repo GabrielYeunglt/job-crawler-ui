@@ -3,25 +3,32 @@ import { BasePage } from './basePage';
 import { Job } from '../../models/job';
 import { iJobListPage } from './iJobListPage';
 import { format } from 'util';
+import { DatabaseService } from '../services/databaseService';
 
 export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     protected jobList: Job[];
     protected jobListXPath: string;
     protected currentPage: number;
     protected paginationXPath: string;
-    constructor(driver: WebDriver, siteName: string) {
+    protected viewedJobs: Set<string>;
+    constructor(driver: WebDriver, siteName: string, viewedJobs: Set<string>) {
         super(driver, siteName); // ✅ pass driver to BasePage
         this.jobList = [];
         this.jobListXPath = "";
         this.currentPage = 1;
         this.paginationXPath = "";
+        this.viewedJobs = viewedJobs;
     }
     override async runPageFlow(): Promise<void> {
         await this.open();
         await this.sleep(2000);
         do {
             await this.extractJobs();
+            break;
         } while (await this.nextPage());
+        for (const job of this.jobList) {
+            DatabaseService.saveJob(job.id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score, job.features.join(','))
+        }
     }
     async extractJobs(): Promise<void> {
         const jobElementList = await this.getJobElementList();
@@ -31,7 +38,9 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
         }
         for (const jobElement of jobElementList) {
             try {
-                this.jobList.push(await this.extractJobDetail(jobElement));
+                if (!this.viewedJobs.has(Job.constructKey(await this.getJobIdFromJobElement(jobElement), this.siteName))) {
+                    this.jobList.push(await this.extractJobDetail(jobElement));
+                }
             }
             catch (err) {
                 console.error(`Error when extracting detail: ${err}`);
@@ -44,6 +53,7 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     }
     abstract getJobIdFromUrl(url: string): string;
     abstract extractJobDetail(jobElement: WebElement): Promise<Job>;
+    abstract getJobIdFromJobElement(jobElement: WebElement): Promise<string>;
     async nextPage(): Promise<boolean> {
         const formattedNextPageXPath = format(this.paginationXPath, ++this.currentPage);
         try {

@@ -3,8 +3,11 @@ import { Job } from "../../../models/job";
 import { BaseJobListPage } from "../baseJobListPage";
 
 export class IndeedJobListPage extends BaseJobListPage {
-    constructor(driver: WebDriver, siteName: string) {
-        super(driver, siteName);
+    override getJobIdFromJobElement(jobElement: WebElement): Promise<string> {
+        throw new Error("Method not implemented.");
+    }
+    constructor(driver: WebDriver, siteName: string, viewedJobs: Set<string>) {
+        super(driver, siteName, viewedJobs);
         this.jobListXPath = './/div[@data-testid="slider_container"]';
     }
     override async extractJobDetail(jobElement: WebElement): Promise<Job> {

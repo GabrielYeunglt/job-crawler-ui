@@ -16,12 +16,21 @@ export abstract class BasePage implements IPage {
         await this.driver.get(this.url);
     }
 
-    async waitForElement(locator: By, timeout = 10000): Promise<WebElement> {
-        return await this.waitForElementSpecifyDriver(this.driver, locator, timeout);
+    async waitForNestedElement(parent: WebElement, locator: By, timeout = 10000): Promise<WebElement> {
+        await this.driver.wait(async () => {
+            try {
+                const child = await parent.findElement(locator);
+                return child;
+            } catch (err) {
+                return false;
+            }
+        }, timeout, 'Timed out waiting for nested element');
+        const element = await parent.findElement(locator);
+        return element;
     }
 
-    async waitForElementSpecifyDriver(driver: WebDriver, locator: By, timeout = 10000): Promise<WebElement> {
-        await driver.wait(until.elementLocated(locator), timeout);
+    async waitForElement(locator: By, timeout = 10000): Promise<WebElement> {
+        await this.driver.wait(until.elementLocated(locator), timeout);
         const element = await this.driver.findElement(locator);
         return element;
     }
@@ -63,5 +72,9 @@ export abstract class BasePage implements IPage {
 
     sleep(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    getRandomInt(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }

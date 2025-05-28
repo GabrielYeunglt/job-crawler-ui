@@ -1,5 +1,5 @@
 export class Job {
-    id?: string;
+    id: string;
     title: string;
     company: string;
     location: string;
@@ -7,9 +7,11 @@ export class Job {
     postedDate: string;
     url: string;
     site: string;
+    score: number;
+    features: string[]
 
     constructor(data: Partial<Job>) {
-        this.id = data.id;
+        this.id = data.id || '';
         this.title = data.title || '';
         this.company = data.company || '';
         this.location = data.location || '';
@@ -17,6 +19,8 @@ export class Job {
         this.postedDate = data.postedDate || '';
         this.url = data.url || '';
         this.site = data.site || '';
+        this.score = data.score || 0,
+            this.features = data.features || []
     }
 
     equals(other: Job): boolean {
@@ -24,5 +28,9 @@ export class Job {
             this.id === other.id &&
             this.site === other.site
         );
+    }
+
+    static constructKey(id: string, site: string): string {
+        return `${id}|${site}`;
     }
 }

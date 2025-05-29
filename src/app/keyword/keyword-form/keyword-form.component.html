@@ -1,0 +1,37 @@
+<h2>{{ editing ? 'Edit' : 'Create' }} Keyword</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <label>Name:</label>
+  <input formControlName="name" />
+
+  <label>Type:</label>
+  <select formControlName="type">
+    <option [value]="0">All</option>
+    <option [value]="1">Title</option>
+    <option [value]="2">Company</option>
+    <option [value]="3">Location</option>
+    <option [value]="4">PostedDate</option>
+    <option [value]="5">Description</option>
+  </select>
+
+  <label>Category:</label>
+  <div formGroupName="category">
+    <input formControlName="category" placeholder="Category name" />
+    <input formControlName="weight" type="number" placeholder="Weight" />
+  </div>
+
+  <label>Synonyms:</label>
+  <div formArrayName="synonyms">
+    <div *ngFor="let ctrl of synonyms.controls; let i = index">
+      <input [formControlName]="i" />
+      <button type="button" (click)="removeSynonym(i)">Remove</button>
+    </div>
+  </div>
+  <button type="button" (click)="addSynonym()">+ Add Synonym</button>
+
+  <div class="actions">
+    <button type="submit">Save</button>
+    <button type="button" (click)="cancel()">Cancel</button>
+    <button *ngIf="editing" type="button" (click)="delete()">Delete</button>
+  </div>
+</form>

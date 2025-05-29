@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { CrawlButtonComponent } from "./shared/crawl-button/crawl-button.component";
+import { AppRoutingModule } from './app.routes';
 
 @Component({
     standalone: true,
     selector: 'app-root',
-    imports: [RouterOutlet, CrawlButtonComponent],
+    imports: [AppRoutingModule, CrawlButtonComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })

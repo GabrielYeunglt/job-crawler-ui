@@ -1,0 +1,11 @@
+<h2>Keyword List</h2>
+<button (click)="createKeyword()">+ Add Keyword</button>
+
+<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+  <tr *ngFor="let kw of keywords" (click)="editKeyword(kw.name)">
+    <td>{{ kw.name }}</td>
+  </tr>
+</table>

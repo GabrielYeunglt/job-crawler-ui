@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { CrawlService } from './selenium/services/crawlService';
+import { registerKeywordIpcHandlers } from './ipc/keywords';
+import { registerCrawlIpcHandlers } from './ipc/crawl';
 
 dotenv.config();
 
@@ -20,11 +22,8 @@ async function createWindow() {
     win.webContents.openDevTools();
 }
 
-app.whenReady().then(createWindow);
-
-const crawlService = new CrawlService();
-
-ipcMain.handle('start-crawl', async (event, keyword: string) => {
-    const results = await crawlService.runCrawl(keyword);
-    return results;
-})
+app.whenReady().then(() => {
+    createWindow();
+    registerKeywordIpcHandlers();
+    registerCrawlIpcHandlers();
+});

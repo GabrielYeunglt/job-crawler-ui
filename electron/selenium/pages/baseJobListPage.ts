@@ -3,7 +3,7 @@ import { BasePage } from './basePage';
 import { Job } from '../../models/job';
 import { iJobListPage } from './iJobListPage';
 import { format } from 'util';
-import { DatabaseService } from '../services/databaseService';
+import { DatabaseService } from '../../services/databaseService';
 
 export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     protected jobList: Job[];

@@ -1,6 +1,6 @@
 import { catchError } from 'rxjs';
-import db from '../../db';
-import { Job } from '../../models/job';
+import db from '../db';
+import { Job } from '../models/job';
 
 export class DatabaseService {
 

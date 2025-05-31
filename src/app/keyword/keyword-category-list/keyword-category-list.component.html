@@ -1,9 +1,9 @@
 <div class="bg-white rounded-xl shadow p-6">
   <div class="flex items-center justify-between mb-4">
-    <h2 class="text-xl font-bold text-gray-800">Keyword List</h2>
-    <button (click)="createKeyword()"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-      + Add Keyword
+    <h2 class="text-xl font-bold text-gray-800">Keyword Category List</h2>
+    <button (click)="createKeywordCategory()"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+      + Add Keyword Category
     </button>
   </div>
 
@@ -12,13 +12,15 @@
       <thead>
         <tr class="bg-gray-100 text-left text-sm text-gray-700">
           <th class="px-4 py-2">Name</th>
+          <th class="px-4 py-2">Weight</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let kw of keywords"
-            (click)="editKeyword(kw.id)"
+        <tr *ngFor="let cat of categories"
+            (click)="editKeywordCategory(cat.id)"
             class="hover:bg-gray-50 cursor-pointer border-b text-sm text-gray-800">
-          <td class="px-4 py-2">{{ kw.name }}</td>
+          <td class="px-4 py-2">{{ cat.name }}</td>
+          <td class="px-4 py-2">{{ cat.weight }}</td>
         </tr>
       </tbody>
     </table>

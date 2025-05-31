@@ -1,23 +1,12 @@
 import { Injectable } from '@angular/core';
+import { BaseService } from './base.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CrawlerService {
-
-    constructor() { }
+export class CrawlerService extends BaseService {
 
     async startCrawl(keyword: string): Promise<string[]> {
-        if (!(window as any).electron?.invoke) {
-            console.error('Electron IPC not available');
-            return [];
-        }
-        try {
-            const results: string[] = await (window as any).electron.invoke('start-crawl', keyword);
-            return results;
-        } catch (error) {
-            console.error('Crawl failed: ', error);
-            return [];
-        }
+        return (await this.invoke<string[]>('start-crawl', keyword)) ?? [];
     }
 }

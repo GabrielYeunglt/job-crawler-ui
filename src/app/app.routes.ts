@@ -1,12 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+import { HomepageComponent } from './homepage/homepage.component';
+import { CrawlpageComponent } from './crawlpage/crawlpage.component';
 
 export const routes: Routes = [
     { path: 'keyword', loadChildren: () => import('./keyword/keyword.module').then(m => m.KeywordModule) },
-    { path: '', redirectTo: '/keyword', pathMatch: 'full' },];
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
-})
-export class AppRoutingModule { }
+    { path: 'crawl', component: CrawlpageComponent },
+    { path: '', component: HomepageComponent },
+];

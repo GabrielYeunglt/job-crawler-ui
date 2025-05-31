@@ -1,9 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CrawlerService } from '../../services/crawler.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     standalone: true,
     selector: 'app-crawl-button',
+    imports: [CommonModule],
     templateUrl: './crawl-button.component.html',
     styleUrls: ['./crawl-button.component.scss']
 })

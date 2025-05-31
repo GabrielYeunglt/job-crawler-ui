@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
-import { CrawlButtonComponent } from "./shared/crawl-button/crawl-button.component";
-import { AppRoutingModule } from './app.routes';
+import { Component } from '@angular/core'
+import { Router, RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({
-    standalone: true,
     selector: 'app-root',
-    imports: [AppRoutingModule, CrawlButtonComponent],
+    imports: [RouterOutlet, NavbarComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
     title = 'job-crawler-ui';
+
+    constructor(private router: Router) { }
 }

@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KeywordService } from '../keyword.service';
+import { KeywordService } from '../../services/keyword.service';
+import { KeywordCategory } from '../../../../electron/models/keyword';
 
 @Component({
-    selector: 'app-keyword-form',
     standalone: false,
+    selector: 'app-keyword-form',
     templateUrl: './keyword-form.component.html',
     styleUrls: ['./keyword-form.component.scss']
 })
 export class KeywordFormComponent implements OnInit {
     form: FormGroup;
-    allKeywords: any[] = [];
+    // allKeywords: any[] = [];
+    allCategories: any[] = [];
     editing: boolean = false;
 
     constructor(
@@ -21,9 +23,12 @@ export class KeywordFormComponent implements OnInit {
         private keywordService: KeywordService
     ) {
         this.form = this.fb.group({
+            id: [0],
             name: [''],
-            type: [0], // 0 = all
+            type: [0],
+            category_id: [0],
             category: this.fb.group({
+                id: [0],
                 category: [''],
                 weight: [0]
             }),
@@ -36,16 +41,24 @@ export class KeywordFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.keywordService.getKeywords().then(kwList => {
-            this.allKeywords = kwList;
+        const id = Number(this.route.snapshot.paramMap.get('id'));
 
-            const name = this.route.snapshot.paramMap.get('name');
-            if (name) {
+        Promise.all([
+            this.keywordService.getKeyword(id),
+            this.keywordService.getKeywordCategories(),
+            this.keywordService.getKeywordSynonyms(id)
+        ]).then(([kw, categories, synonyms]) => {
+            this.allCategories = categories;
+
+            if (id) {
                 this.editing = true;
-                const found = this.allKeywords.find(k => k.name === name);
-                if (found) this.form.patchValue(found);
-                for (const syn of found.synonyms || []) {
-                    this.synonyms.push(this.fb.control(syn));
+                if (kw) {
+                    this.form.patchValue({
+                        category: this.allCategories.find(c => c.id === kw.category_id)
+                    });
+                    for (const syn of synonyms || []) {
+                        this.synonyms.push(this.fb.control(syn.name));
+                    }
                 }
             }
         });
@@ -60,16 +73,37 @@ export class KeywordFormComponent implements OnInit {
     }
 
     async save() {
-        const updated = this.form.value;
-        const existing = this.allKeywords.filter(k => k.name !== updated.name);
-        existing.push(updated);
-        await this.keywordService.saveKeywords(existing);
+        // const value = this.form.value;
+        const keyword = this.form.value;
+        const category = this.allCategories.find(c => c.id === keyword.category_id) || {
+            category: this.form.value.category.name,
+            weight: this.form.value.category.weight
+        };
+
+        if (!this.form.value.category.name) {
+            await this.keywordService.saveKeywordCategory(this.form.value.categories);
+        }
+
+        // const keyword = {
+        //     ...value,
+        //     category,
+        //     synonyms: value.synonyms.map((name: string) => ({
+        //         keyword_id: value.id || 0,
+        //         name
+        //     }))
+        // };
+
+        // const existing = this.allKeywords.filter(k => k.name !== value.name);
+        // existing.push(keyword);
+
+        // await this.keywordService.saveKeywords(existing);
+        await this.keywordService.saveKeyword(keyword);
         this.router.navigate(['/keyword']);
     }
 
     async delete() {
-        const name = this.form.value.name;
-        await this.keywordService.deleteKeyword(name);
+        const id = this.form.value.id;
+        await this.keywordService.deleteKeyword(id);
         this.router.navigate(['/keyword']);
     }
 

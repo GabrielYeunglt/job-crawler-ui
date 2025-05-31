@@ -1,37 +1,83 @@
-<h2>{{ editing ? 'Edit' : 'Create' }} Keyword</h2>
+<div class="bg-white rounded-xl shadow p-6 max-w-2xl mx-auto">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    {{ editing ? "Edit" : "Create" }} Keyword
+  </h2>
 
-<form [formGroup]="form" (ngSubmit)="save()">
-  <label>Name:</label>
-  <input formControlName="name" />
-
-  <label>Type:</label>
-  <select formControlName="type">
-    <option [value]="0">All</option>
-    <option [value]="1">Title</option>
-    <option [value]="2">Company</option>
-    <option [value]="3">Location</option>
-    <option [value]="4">PostedDate</option>
-    <option [value]="5">Description</option>
-  </select>
-
-  <label>Category:</label>
-  <div formGroupName="category">
-    <input formControlName="category" placeholder="Category name" />
-    <input formControlName="weight" type="number" placeholder="Weight" />
-  </div>
-
-  <label>Synonyms:</label>
-  <div formArrayName="synonyms">
-    <div *ngFor="let ctrl of synonyms.controls; let i = index">
-      <input [formControlName]="i" />
-      <button type="button" (click)="removeSynonym(i)">Remove</button>
+  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-5">
+    <!-- Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+      <input formControlName="name"
+             type="text"
+             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"/>
     </div>
-  </div>
-  <button type="button" (click)="addSynonym()">+ Add Synonym</button>
 
-  <div class="actions">
-    <button type="submit">Save</button>
-    <button type="button" (click)="cancel()">Cancel</button>
-    <button *ngIf="editing" type="button" (click)="delete()">Delete</button>
-  </div>
-</form>
+    <!-- Type -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+      <select formControlName="type"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500">
+        <option [value]="0">All</option>
+        <option [value]="1">Title</option>
+        <option [value]="2">Company</option>
+        <option [value]="3">Location</option>
+        <option [value]="4">PostedDate</option>
+        <option [value]="5">Description</option>
+      </select>
+    </div>
+
+    <!-- Category (optional) -->
+    <!--
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+      <select [formControl]="form.get('category_id')"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2">
+        <option [ngValue]="0" disabled>Select a category</option>
+        <option *ngFor="let cat of allCategories" [ngValue]="cat.id">
+          {{ cat.category }} (Weight: {{ cat.weight }})
+        </option>
+      </select>
+    </div>
+    -->
+
+    <!-- Synonyms -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Synonyms</label>
+      <div formArrayName="synonyms" class="space-y-2">
+        <div *ngFor="let ctrl of synonyms.controls; let i = index" class="flex gap-2">
+          <input [formControlName]="i"
+                 class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+          <button type="button"
+                  (click)="removeSynonym(i)"
+                  class="text-red-500 hover:text-red-700 font-medium text-sm">
+            Remove
+          </button>
+        </div>
+      </div>
+      <button type="button"
+              (click)="addSynonym()"
+              class="mt-2 text-blue-600 hover:text-blue-800 font-medium text-sm">
+        + Add Synonym
+      </button>
+    </div>
+
+    <!-- Actions -->
+    <div class="pt-4 flex flex-wrap gap-3">
+      <button type="submit"
+              class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
+        Save
+      </button>
+      <button type="button"
+              (click)="cancel()"
+              class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400">
+        Cancel
+      </button>
+      <button *ngIf="editing"
+              type="button"
+              (click)="delete()"
+              class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700">
+        Delete
+      </button>
+    </div>
+  </form>
+</div>

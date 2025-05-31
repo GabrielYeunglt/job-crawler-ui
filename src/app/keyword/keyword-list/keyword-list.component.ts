@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { KeywordService } from '../keyword.service';
+import { KeywordService } from '../../services/keyword.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,8 +17,8 @@ export class KeywordListComponent implements OnInit {
         this.keywords = await this.keywordService.getKeywords();
     }
 
-    editKeyword(name: string) {
-        this.router.navigate(['/keyword/edit', name]);
+    editKeyword(id: number) {
+        this.router.navigate(['/keyword/edit', id]);
     }
 
     createKeyword() {

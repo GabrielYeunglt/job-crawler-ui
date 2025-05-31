@@ -1,0 +1,42 @@
+<div class="bg-white rounded-xl shadow p-6 max-w-xl mx-auto">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    {{ editing ? "Edit" : "Create" }} Keyword Category
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-5">
+    <!-- Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+      <input formControlName="name"
+             type="text"
+             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+    </div>
+
+    <!-- Weight -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Weight</label>
+      <input formControlName="weight"
+             type="number"
+             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+    </div>
+
+    <!-- Actions -->
+    <div class="pt-4 flex flex-wrap gap-3">
+      <button type="submit"
+              class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
+        Save
+      </button>
+      <button type="button"
+              (click)="cancel()"
+              class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400">
+        Cancel
+      </button>
+      <button *ngIf="editing"
+              type="button"
+              (click)="delete()"
+              class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700">
+        Delete
+      </button>
+    </div>
+  </form>
+</div>

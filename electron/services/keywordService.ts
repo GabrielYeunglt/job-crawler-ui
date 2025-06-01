@@ -17,8 +17,8 @@ export class KeywordService {
                 matchedKeywords.add(keyword);
 
                 // Add only the first occurrence of each category
-                if (!categoryMap.has(keyword.category.category)) {
-                    categoryMap.set(keyword.category.category, keyword.category.weight);
+                if (!categoryMap.has(keyword.category.name)) {
+                    categoryMap.set(keyword.category.name, keyword.category.weight);
                 }
             }
         }
@@ -36,7 +36,7 @@ export class KeywordService {
         const categoryMap = new Map<string, number>();
 
         for (const keyword of keywords) {
-            const categoryKey = keyword.category.category;
+            const categoryKey = keyword.category.name;
 
             // Add only the first occurrence of each category
             if (!categoryMap.has(categoryKey)) {
@@ -54,7 +54,7 @@ export class KeywordService {
         const grouped = new Map<string, Keyword[]>();
 
         for (const keyword of keywords) {
-            const categoryName = keyword.category.category;
+            const categoryName = keyword.category.name;
 
             if (!grouped.has(categoryName)) {
                 grouped.set(categoryName, []);
@@ -84,7 +84,7 @@ export class KeywordService {
 
         const searchSpace = textToCheck(keyword.type);
 
-        const terms = [keyword.name.toLowerCase(), ...Array.from(keyword.synonyms).map(s => s.toLowerCase())];
+        const terms = [keyword.name.toLowerCase(), ...Array.from(keyword.synonyms).map(s => s.name.toLowerCase())];
         return terms.some(term => searchSpace.includes(term));
     }
 }

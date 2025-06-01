@@ -27,7 +27,7 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
             break;
         } while (await this.nextPage());
         for (const job of this.jobList) {
-            DatabaseService.saveJob(job.id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score, job.features.join(','))
+            DatabaseService.saveJob(job.id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score)
         }
     }
     async extractJobs(): Promise<void> {

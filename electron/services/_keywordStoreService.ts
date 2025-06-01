@@ -30,7 +30,7 @@ export class KeywordStoreService {
             name: k.name,
             type: k.type,
             category: {
-                category: k.category.category,
+                category: k.category.name,
                 weight: k.category.weight,
             },
             synonyms: Array.from(k.synonyms),

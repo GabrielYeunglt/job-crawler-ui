@@ -31,13 +31,18 @@ export class DatabaseService {
     }
 
     static saveKeyword(name: string, type: number, category_id: number): Database.RunResult {
-        const stmt = db.prepare(`INSERT INTO keywords (name, type, category_id) VALUES (?, ?, ?)`);
-        return this.runInsert(stmt, name, type, category_id);
+        const stmt = db.prepare(`INSERT OR REPLACE INTO keywords (name, type, category_id) VALUES (?, ?, ?)`);
+        return this.runInsert(stmt, [name, type, category_id]);
     }
 
     static saveKeywordSynonym(keyword_id: string, name: string): Database.RunResult {
-        const stmt = db.prepare(`INSERT INTO keywordsynonyms (keyword_idh, name) VALUES (?, ?)`);
+        const stmt = db.prepare(`INSERT OR REPLACE INTO keywordsynonyms (keyword_idh, name) VALUES (?, ?)`);
         return this.runInsert(stmt, keyword_id, name);
+    }
+
+    static editKeywordCategory(id: number, name: string, weight: number): Database.RunResult {
+        const stmt = db.prepare(`REPLACE INTO keywordcategories (id, name, weight) VALUES (?, ?, ?)`);
+        return this.runInsert(stmt, id, name, weight);
     }
 
     static getJob(id: string, site: string): Job {
@@ -108,10 +113,20 @@ export class DatabaseService {
         }
     }
 
-    static deleteKeyword(keyword_id: number): number {
+    static deleteKeywordCategory(category_id: number): Database.RunResult {
+        try {
+            const stmt = db.prepare(`DELETE FROM keywordcategories WHERE id = ?`);
+            return stmt.run(category_id);
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+
+    static deleteKeyword(keyword_id: number): Database.RunResult {
         try {
             const stmt = db.prepare(`DELETE FROM keywords WHERE id = ?`);
-            return Number(stmt.run(keyword_id).changes > 0);
+            return stmt.run(keyword_id);
         } catch (err) {
             console.error(err);
             throw err;

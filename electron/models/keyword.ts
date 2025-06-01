@@ -1,11 +1,11 @@
 export class KeywordCategory {
     id: number;
-    category: string;
+    name: string;
     weight: number;
 
     constructor(data: Partial<KeywordCategory>) {
         this.id = data.id || 0;
-        this.category = data.category || '';
+        this.name = data.name || '';
         this.weight = data.weight || 0;
     }
 }

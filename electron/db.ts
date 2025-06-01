@@ -37,7 +37,6 @@ db.exec(`
     url TEXT,
     score DECIMAL(2,2),
     created_at TEXT,
-    PRIMARY KEY (id, site),
     UNIQUE (url)
   )
 `);

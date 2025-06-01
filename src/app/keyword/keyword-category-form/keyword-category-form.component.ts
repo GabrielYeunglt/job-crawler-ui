@@ -35,6 +35,9 @@ export class KeywordCategoryFormComponent {
         ]).then(([category]) => {
             if (category) {
                 this.editing = true;
+                // Either destructure:
+                const { id, name, weight } = category;
+                this.form.setValue({ id, name, weight });
             }
         });
     }
@@ -42,13 +45,17 @@ export class KeywordCategoryFormComponent {
     async save() {
         const category = this.form.value;
 
-        await this.keywordService.saveKeywordCategory(category);
+        if (this.editing) {
+            await this.keywordService.editKeywordCategory(category);
+        } else {
+            await this.keywordService.saveKeywordCategory(category);
+        }
         this.router.navigate(['/keyword']);
     }
 
     async delete() {
         const id = this.form.value.id;
-        await this.keywordService.deleteKeyword(id);
+        await this.keywordService.deleteKeywordCategory(id);
         this.router.navigate(['/keyword']);
     }
 

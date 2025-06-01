@@ -34,11 +34,19 @@ export class KeywordService extends BaseService {
         return (await this.invoke<boolean>('save-keyword-category', keywordCat)) ?? false;
     }
 
+    async editKeywordCategory(keywordCat: KeywordCategory): Promise<boolean> {
+        return (await this.invoke<boolean>('edit-keyword-category', keywordCat)) ?? false;
+    }
+
     // async saveKeywords(keywords: Keyword[]): Promise<boolean> {
     //     return (await this.invoke<boolean>('save-keywords', keywords)) ?? false;
     // }
 
-    async deleteKeyword(name: string): Promise<boolean> {
-        return (await this.invoke<boolean>('delete-keyword', name)) ?? false;
+    async deleteKeyword(id: number): Promise<boolean> {
+        return (await this.invoke<boolean>('delete-keyword', id)) ?? false;
+    }
+
+    async deleteKeywordCategory(id: number): Promise<boolean> {
+        return (await this.invoke<boolean>('delete-keyword-category', id)) ?? false;
     }
 }

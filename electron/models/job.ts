@@ -1,5 +1,6 @@
 export class Job {
-    id: string;
+    id: number;
+    job_id: string;
     title: string;
     company: string;
     location: string;
@@ -10,7 +11,8 @@ export class Job {
     score: number;
 
     constructor(data: Partial<Job>) {
-        this.id = data.id || '';
+        this.id = data.id || -1;
+        this.job_id = data.job_id || '';
         this.title = data.title || '';
         this.company = data.company || '';
         this.location = data.location || '';
@@ -23,12 +25,12 @@ export class Job {
 
     equals(other: Job): boolean {
         return (
-            this.id === other.id &&
+            this.job_id === other.job_id &&
             this.site === other.site
         );
     }
 
-    static constructKey(id: string, site: string): string {
-        return `${id}|${site}`;
+    static constructKey(job_id: string, site: string): string {
+        return `${job_id}|${site}`;
     }
 }

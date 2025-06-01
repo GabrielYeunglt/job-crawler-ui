@@ -13,7 +13,7 @@ export class LinkedinJobListPage extends BaseJobListPage {
         const id = await this.getJobIdFromJobElement(jobElement);
         const job: Job = new Job({
             site: this.siteName,
-            id: id,
+            job_id: id,
             url: this.getUrlFromJobId(id),
             title: (await (await this.waitForNestedElement(jobElement, By.xpath(".//a[@data-control-id]/span[1]"))).getText()).trim(),
             company: (await (await this.waitForNestedElement(jobElement, By.xpath('.//div[contains(@class, "artdeco-entity-lockup__subtitle")]'))).getText()).trim(),

@@ -30,7 +30,7 @@ export class CrawlService {
     static constructViewedJobsSet(viewedJobs: Job[]) {
         const viewedJobsSet: Set<string> = new Set<string>();
         for (const job of viewedJobs) {
-            const key = Job.constructKey(job.id, job.site);
+            const key = Job.constructKey(job.job_id, job.site);
             if (!viewedJobsSet.has(key)) {
                 viewedJobsSet.add(key);
             }

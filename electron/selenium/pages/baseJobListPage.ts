@@ -33,7 +33,7 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
             try {
                 const result = this.keywordService.processJob(job);
                 job.score = result.score;
-                const dbResult = DatabaseService.saveJob(job.id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score)
+                const dbResult = DatabaseService.saveJob(job.job_id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score)
                 for (const keyword of result.matchedKeyword) {
                     DatabaseService.saveJobFeature(Number(dbResult.lastInsertRowid), keyword.id);
                 }

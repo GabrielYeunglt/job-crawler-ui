@@ -8,6 +8,6 @@ export class LinkedinSite extends BaseSite {
     constructor(driver: WebDriver, siteName: string = 'generic', viewedJobs: Set<string> = new Set<string>) {
         super(driver, siteName, viewedJobs);
         this.pages.push(new LinkedinHomePage(driver));
-        this.pages.push(new LinkedinJobListPage(driver, siteName, this.viewedJobs));
+        this.pages.push(new LinkedinJobListPage(driver, siteName, viewedJobs));
     }
 }

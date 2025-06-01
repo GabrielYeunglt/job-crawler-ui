@@ -15,7 +15,7 @@ export class IndeedJobListPage extends BaseJobListPage {
         const job: Job = new Job({
             site: "Indeed",
             url: await (await this.waitForElement(By.xpath(".//a"))).getAttribute("href"),
-            id: this.getJobIdFromUrl(this.url),
+            job_id: this.getJobIdFromUrl(this.url),
             title: (await (await this.waitForElement(By.xpath(".//a[contains(@class, 'jcs-JobTitle')]"))).getText()).trim(),
             company: (await (await this.waitForElement(By.xpath(".//span[@data-testid='company-name']"))).getText()).trim(),
             location: (await (await this.waitForElement(By.xpath(".//div[@data-testid='text-location']"))).getText()).trim(),

@@ -8,7 +8,6 @@ export class Job {
     url: string;
     site: string;
     score: number;
-    features: string[]
 
     constructor(data: Partial<Job>) {
         this.id = data.id || '';
@@ -19,8 +18,7 @@ export class Job {
         this.postedDate = data.postedDate || '';
         this.url = data.url || '';
         this.site = data.site || '';
-        this.score = data.score || 0,
-            this.features = data.features || []
+        this.score = data.score || 0
     }
 
     equals(other: Job): boolean {

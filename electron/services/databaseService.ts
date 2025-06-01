@@ -20,8 +20,8 @@ export class DatabaseService {
         return this.runInsert(stmt, job_id, site, title, company, location, description, postedDate, url, score, now);
     }
 
-    static saveJobFeature(job_id: string, keyword_id: string): Database.RunResult {
-        const stmt = db.prepare(`INSERT INTO jobfeatures (job_id, job_site, keyword_id) VALUES (?, ?, ?)`);
+    static saveJobFeature(job_id: number, keyword_id: number): Database.RunResult {
+        const stmt = db.prepare(`INSERT INTO jobfeatures (job_id, keyword_id) VALUES (?, ?)`);
         return this.runInsert(stmt, job_id, keyword_id);
     }
 
@@ -145,6 +145,16 @@ export class DatabaseService {
         try {
             const stmt = db.prepare(`DELETE FROM keywords WHERE id = ?`);
             return stmt.run(keyword_id);
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+
+    static resetJobsTable(): Database.RunResult {
+        try {
+            const stmt = db.prepare(`DELETE FROM jobs`);
+            return stmt.run();
         } catch (err) {
             console.error(err);
             throw err;

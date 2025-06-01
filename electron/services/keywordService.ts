@@ -1,20 +1,40 @@
 import { Job } from "../models/job";
-import { Keyword, KeywordType } from "../models/keyword";
+import { Keyword, KeywordCategory, KeywordType } from "../models/keyword";
+import { DatabaseService } from "./databaseService";
 
 export class KeywordService {
-    processJob(job: Job, keywords: Set<Keyword>, totalWeight: number): Job {
-        const result = this.getMatchedKeywords(job, keywords);
-        job.score = this.calculateScore(result.weight, totalWeight);
-        job.features = Array.from(result.matched).map(k => k.name);
-        return job;
+    keywords: Keyword[];
+    keywordCategories: KeywordCategory[];
+    totalWeight: number;
+
+    constructor() {
+        this.keywords = [];
+        this.keywordCategories = [];
+        this.refreshKeywords();
+        this.totalWeight = this.getTotalWeight();
     }
 
-    getMatchedKeywords(job: Job, keywords: Set<Keyword>): { weight: number; matched: Set<Keyword> } {
-        const matchedKeywords: Set<Keyword> = new Set<Keyword>();
+    refreshKeywords(): void {
+        this.keywords = DatabaseService.getKeywords();
+        this.keywordCategories = DatabaseService.getKeywordCategories();
+    }
+
+    getTotalWeight(): number {
+        return this.keywordCategories.reduce((sum, cat) => sum + cat.weight, 0);
+    }
+
+    processJob(job: Job): { score: number, matchedKeyword: Keyword[] } {
+        const result = this.getMatchedKeywords(job);
+        const score = this.calculateScore(result.weight);
+        return { score: score, matchedKeyword: result.matched };
+    }
+
+    getMatchedKeywords(job: Job): { weight: number; matched: Keyword[] } {
+        const matchedKeywords: Keyword[] = [];
         const categoryMap = new Map<string, number>();
-        for (const keyword of keywords) {
+        for (const keyword of this.keywords) {
             if (this.matches(job, keyword)) {
-                matchedKeywords.add(keyword);
+                matchedKeywords.push(keyword);
 
                 // Add only the first occurrence of each category
                 if (!categoryMap.has(keyword.category.name)) {
@@ -27,9 +47,9 @@ export class KeywordService {
         return { weight: categoryTotalWeight, matched: matchedKeywords };
     }
 
-    calculateScore(weight: number, totalWeight: number): number {
-        if (totalWeight === 0) return 0;
-        return (weight / totalWeight) * 100;
+    calculateScore(weight: number): number {
+        if (this.totalWeight === 0) return 0;
+        return (weight / this.totalWeight) * 100;
     }
 
     calculateTotalWeight(keywords: Set<Keyword>): number {
@@ -84,7 +104,7 @@ export class KeywordService {
 
         const searchSpace = textToCheck(keyword.type);
 
-        const terms = [keyword.name.toLowerCase(), ...Array.from(keyword.synonyms).map(s => s.name.toLowerCase())];
+        const terms = [keyword.name.toLowerCase(), ...keyword.synonyms.map(s => s.name.toLowerCase())];
         return terms.some(term => searchSpace.includes(term));
     }
 }

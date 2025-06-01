@@ -4,6 +4,7 @@ import { Job } from '../../models/job';
 import { iJobListPage } from './iJobListPage';
 import { format } from 'util';
 import { DatabaseService } from '../../services/databaseService';
+import { KeywordService } from '../../services/keywordService';
 
 export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     protected jobList: Job[];
@@ -11,6 +12,7 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     protected currentPage: number;
     protected paginationXPath: string;
     protected viewedJobs: Set<string>;
+    protected keywordService: KeywordService;
     constructor(driver: WebDriver, siteName: string, viewedJobs: Set<string>) {
         super(driver, siteName); // ✅ pass driver to BasePage
         this.jobList = [];
@@ -18,16 +20,26 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
         this.currentPage = 1;
         this.paginationXPath = "";
         this.viewedJobs = viewedJobs;
+        this.keywordService = new KeywordService();
     }
     override async runPageFlow(): Promise<void> {
         await this.open();
         await this.sleep(2000);
         do {
             await this.extractJobs();
-            break;
+            break;  // debug
         } while (await this.nextPage());
         for (const job of this.jobList) {
-            DatabaseService.saveJob(job.id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score)
+            try {
+                const result = this.keywordService.processJob(job);
+                job.score = result.score;
+                const dbResult = DatabaseService.saveJob(job.id, job.site, job.title, job.company, job.location, job.description, job.postedDate, job.url, job.score)
+                for (const keyword of result.matchedKeyword) {
+                    DatabaseService.saveJobFeature(Number(dbResult.lastInsertRowid), keyword.id);
+                }
+            } catch (err) {
+                console.error(`Process job score failed: ${err}`);
+            }
         }
     }
     async extractJobs(): Promise<void> {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Keyword, KeywordCategory, KeywordSynonym } from '../../../electron/models/keyword';
 import { BaseService } from './base.service';
+import { DatabaseResult } from '../../model/databaseResult'
 
 @Injectable({
     providedIn: 'root'
@@ -26,12 +27,25 @@ export class KeywordService extends BaseService {
         return (await this.invoke<KeywordSynonym[]>('get-keyword-synonyms', keyword_id)) ?? [];
     }
 
-    async saveKeyword(keyword: Keyword): Promise<boolean> {
-        return (await this.invoke<boolean>('save-keyword', keyword)) ?? false;
+    async saveKeyword(keyword: Keyword): Promise<number> {
+        const result = (await this.invoke<DatabaseResult>('save-keyword', keyword));
+        if (result) {
+            return Number(result.lastInsertRowid);
+        } else {
+            return -1;
+        }
     }
 
     async saveKeywordCategory(keywordCat: KeywordCategory): Promise<boolean> {
         return (await this.invoke<boolean>('save-keyword-category', keywordCat)) ?? false;
+    }
+
+    async saveKeywordSynonym(synonym: KeywordSynonym): Promise<boolean> {
+        return (await this.invoke<boolean>('save-keyword-synonym', synonym)) ?? false;
+    }
+
+    async editKeyword(keyword: Keyword): Promise<boolean> {
+        return (await this.invoke<boolean>('edit-keyword', keyword)) ?? false;
     }
 
     async editKeywordCategory(keywordCat: KeywordCategory): Promise<boolean> {

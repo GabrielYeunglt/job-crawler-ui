@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { WindowService } from '../services/window.service';
 
 @Component({
     selector: 'app-navbar',
@@ -11,7 +12,13 @@ import { RouterLink } from '@angular/router';
 export class NavbarComponent {
     menuOpen = false;
 
+    constructor(private windowService: WindowService) { }
+
     toggleMenu() {
         this.menuOpen = !this.menuOpen;
+    }
+
+    async openDevTools() {
+        await this.windowService.openDevTools();
     }
 }

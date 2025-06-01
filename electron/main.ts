@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { CrawlService } from './selenium/services/crawlService';
 import { registerKeywordIpcHandlers } from './ipc/keywords';
 import { registerCrawlIpcHandlers } from './ipc/crawl';
+import { registerWindowHandlers } from './ipc/window';
 
 dotenv.config();
 
@@ -19,11 +20,11 @@ async function createWindow() {
     });
 
     win.loadURL(`file://${path.join(__dirname, '../dist/job-crawler-ui/browser/index.html')}`);
-    win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
     createWindow();
     registerKeywordIpcHandlers();
     registerCrawlIpcHandlers();
+    registerWindowHandlers();
 });

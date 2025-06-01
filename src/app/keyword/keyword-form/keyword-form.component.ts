@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeywordService } from '../../services/keyword.service';
 import { KeywordCategory } from '../../../../electron/models/keyword';
@@ -12,7 +12,6 @@ import { KeywordCategory } from '../../../../electron/models/keyword';
 })
 export class KeywordFormComponent implements OnInit {
     form: FormGroup;
-    // allKeywords: any[] = [];
     allCategories: any[] = [];
     editing: boolean = false;
 
@@ -26,7 +25,7 @@ export class KeywordFormComponent implements OnInit {
             id: [0],
             name: [''],
             type: [0],
-            category_id: [0],
+            category_id: [null, Validators.required],
             category: this.fb.group({
                 id: [0],
                 category: [''],
@@ -40,28 +39,34 @@ export class KeywordFormComponent implements OnInit {
         return this.form.get('synonyms') as FormArray;
     }
 
-    ngOnInit(): void {
+    get categoryIdControl(): FormControl {
+        return this.form.get('category_id') as FormControl;
+    }
+
+    async ngOnInit(): Promise<void> {
         const id = Number(this.route.snapshot.paramMap.get('id'));
+        const categories = await this.keywordService.getKeywordCategories();
+        this.allCategories = categories;
 
-        Promise.all([
-            this.keywordService.getKeyword(id),
-            this.keywordService.getKeywordCategories(),
-            this.keywordService.getKeywordSynonyms(id)
-        ]).then(([kw, categories, synonyms]) => {
-            this.allCategories = categories;
-
-            if (id) {
-                this.editing = true;
-                if (kw) {
-                    this.form.patchValue({
-                        category: this.allCategories.find(c => c.id === kw.category_id)
-                    });
-                    for (const syn of synonyms || []) {
-                        this.synonyms.push(this.fb.control(syn.name));
-                    }
+        if (id) {
+            this.editing = true;
+            const [kw, synonyms] = await Promise.all([
+                this.keywordService.getKeyword(id),
+                this.keywordService.getKeywordSynonyms(id)
+            ]);
+            if (kw) {
+                this.form.patchValue({
+                    id: kw.id,
+                    name: kw.name,
+                    type: kw.type,
+                    category_id: kw.category_id,
+                    category: this.allCategories.find(c => c.id === kw.category_id)
+                });
+                for (const syn of synonyms || []) {
+                    this.synonyms.push(this.fb.control(syn.name));
                 }
             }
-        });
+        }
     }
 
     addSynonym() {
@@ -73,31 +78,28 @@ export class KeywordFormComponent implements OnInit {
     }
 
     async save() {
-        // const value = this.form.value;
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
+            return;
+        }
         const keyword = this.form.value;
-        const category = this.allCategories.find(c => c.id === keyword.category_id) || {
-            category: this.form.value.category.name,
-            weight: this.form.value.category.weight
-        };
-
-        if (!this.form.value.category.name) {
-            await this.keywordService.saveKeywordCategory(this.form.value.categories);
+        let keyword_id = this.form.value.id;
+        if (this.editing) {
+            await this.keywordService.editKeyword(keyword);
+        }
+        else {
+            const reuslt = await this.keywordService.saveKeyword(keyword);
+            keyword_id = reuslt;
         }
 
-        // const keyword = {
-        //     ...value,
-        //     category,
-        //     synonyms: value.synonyms.map((name: string) => ({
-        //         keyword_id: value.id || 0,
-        //         name
-        //     }))
-        // };
+        for (const control of this.synonyms.controls) {
+            const synonym = {
+                keyword_id: keyword_id,
+                name: control.value
+            };
+            await this.keywordService.saveKeywordSynonym(synonym);
+        }
 
-        // const existing = this.allKeywords.filter(k => k.name !== value.name);
-        // existing.push(keyword);
-
-        // await this.keywordService.saveKeywords(existing);
-        await this.keywordService.saveKeyword(keyword);
         this.router.navigate(['/keyword']);
     }
 

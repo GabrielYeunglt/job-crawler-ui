@@ -6,22 +6,42 @@
     <li><a routerLink="/crawl" class="hover:underline">Crawl</a></li>
     <li><a routerLink="/keyword" class="hover:underline">Keywords</a></li>
     <!-- <li><a routerLink="/contact" class="hover:underline">Contact</a></li> -->
+    <li>
+      <button class="hover:underline" (click)="openDevTools()">
+        Open DevTools
+      </button>
+    </li>
   </ul>
 
   <button class="md:hidden" (click)="toggleMenu()">
     <!-- Hamburger Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-         viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round"
-            stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 6h16M4 12h16M4 18h16"
+      />
     </svg>
   </button>
 </nav>
 
 <!-- Mobile menu -->
-<div *ngIf="menuOpen" class="md:hidden bg-blue-600 text-white px-6 pb-4 space-y-2">
+<div
+  *ngIf="menuOpen"
+  class="md:hidden bg-red-600 text-white px-6 pb-4 space-y-2"
+>
   <a routerLink="/" class="block hover:underline">Home</a>
   <!-- <a routerLink="/about" class="block hover:underline">About</a> -->
   <a routerLink="/keyword" class="block hover:underline">Keywords</a>
+  <button class="block hover:underline" (click)="openDevTools()">
+    Open DevTools
+  </button>
   <!-- <a routerLink="/contact" class="block hover:underline">Contact</a> -->
 </div>

@@ -31,13 +31,18 @@ export class DatabaseService {
     }
 
     static saveKeyword(name: string, type: number, category_id: number): Database.RunResult {
-        const stmt = db.prepare(`INSERT OR REPLACE INTO keywords (name, type, category_id) VALUES (?, ?, ?)`);
-        return this.runInsert(stmt, [name, type, category_id]);
+        const stmt = db.prepare(`INSERT INTO keywords (name, type, category_id) VALUES (?, ?, ?)`);
+        return this.runInsert(stmt, name, type, category_id);
     }
 
-    static saveKeywordSynonym(keyword_id: string, name: string): Database.RunResult {
-        const stmt = db.prepare(`INSERT OR REPLACE INTO keywordsynonyms (keyword_idh, name) VALUES (?, ?)`);
+    static saveKeywordSynonym(keyword_id: number, name: string): Database.RunResult {
+        const stmt = db.prepare(`INSERT OR REPLACE INTO keywordsynonyms (keyword_id, name) VALUES (?, ?)`);
         return this.runInsert(stmt, keyword_id, name);
+    }
+
+    static editKeyword(id: number, name: string, type: number, category_id: number): Database.RunResult {
+        const stmt = db.prepare(`REPLACE INTO keywords (id, name, type, category_id) VALUES (?, ?, ?, ?)`);
+        return this.runInsert(stmt, id, name, type, category_id);
     }
 
     static editKeywordCategory(id: number, name: string, weight: number): Database.RunResult {
@@ -89,6 +94,19 @@ export class DatabaseService {
         }
     }
 
+    static getKeyword(id: number): Keyword {
+        try {
+            const stmt = db.prepare(`SELECT * FROM keywords WHERE id = ?`);
+            const keyword = stmt.get(id) as Keyword;
+            keyword.category = this.getKeywordCategory(keyword.category_id);
+            keyword.synonyms = this.getKeywordSynonyms(keyword.id);
+            return keyword;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+
     static getKeywords(): Keyword[] {
         try {
             const stmt = db.prepare(`SELECT * FROM keywords`);
@@ -105,7 +123,7 @@ export class DatabaseService {
     }
     static getKeywordSynonyms(keyword_id: number): KeywordSynonym[] {
         try {
-            const stmt = db.prepare(`SELECT * FROM keywordsynonyms WHERE id = ?`);
+            const stmt = db.prepare(`SELECT * FROM keywordsynonyms WHERE keyword_id = ?`);
             return stmt.all(keyword_id) as KeywordSynonym[];
         } catch (err) {
             console.error(err);

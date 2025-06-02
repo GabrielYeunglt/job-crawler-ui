@@ -1,7 +1,6 @@
 import { WebDriver } from "selenium-webdriver";
 import { BasePage } from "./basePage";
 import { iSite } from "./iSite";
-import { Job } from "../../models/job";
 
 export abstract class BaseSite implements iSite {
     protected siteName: string;

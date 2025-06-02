@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Job } from '../../../electron/models/job';
-import { Criteria } from '../../model/criteria';
+import { Criteria } from '../../../electron/models/criteria';
 
 @Injectable({
     providedIn: 'root'

@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import { DatabaseService } from '../services/databaseService';
+import { Criteria } from '../models/criteria';
 
 export function registerJobIpcHandlers() {
 
@@ -9,6 +10,10 @@ export function registerJobIpcHandlers() {
 
     ipcMain.handle('get-jobs', () => {
         return DatabaseService.getRecentJobs();
+    });
+
+    ipcMain.handle('search-jobs', (event, criteria: Criteria) => {
+        return DatabaseService.searchJobs(criteria);
     });
 
 }

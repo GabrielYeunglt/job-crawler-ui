@@ -3,7 +3,7 @@ import { Job } from '../../../electron/models/job';
 import { CommonModule } from '@angular/common';
 import { JobService } from '../services/job.service';
 import { Router } from '@angular/router';
-import { Criteria } from '../../model/criteria';
+import { Criteria } from '../../../electron/models/criteria';
 import { FormsModule } from '@angular/forms';
 
 @Component({

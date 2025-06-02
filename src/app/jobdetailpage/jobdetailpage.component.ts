@@ -16,7 +16,7 @@ export class JobdetailpageComponent {
         const nav = this.router.getCurrentNavigation();
         this.job = nav?.extras.state?.['job'];
     }
-    
+
     openExternalLink(url: string) {
         window.electron.shell.openExternal(url);
     }

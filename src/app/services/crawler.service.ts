@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
-import { DatabaseResult } from '../../model/databaseResult';
+import { DatabaseResult } from '../../../electron/models/databaseResult';
 
 @Injectable({
     providedIn: 'root'

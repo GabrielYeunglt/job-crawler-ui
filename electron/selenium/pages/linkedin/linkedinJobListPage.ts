@@ -34,7 +34,7 @@ export class LinkedinJobListPage extends BaseJobListPage {
         return job;
     }
     protected override get url(): string {
-        return "https://www.linkedin.com/jobs/search/?currentJobId=4238133812&f_F=it&f_PP=100761630&f_TPR=r86400&geoId=101174742&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=R";
+        return "https://www.linkedin.com/jobs/search/?f_PP=100761630%2C101788145&f_T=9&f_TPR=r86400&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=DD";
     }
 
     override getJobIdFromUrl(url: string): string {

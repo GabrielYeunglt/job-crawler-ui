@@ -3,6 +3,7 @@ import db from '../db';
 import { Job } from '../models/job';
 import Database from 'better-sqlite3';
 import { Keyword, KeywordCategory, KeywordSynonym } from '../models/keyword';
+import { Criteria } from '../models/criteria';
 
 export class DatabaseService {
     private static runInsert(stmt: Database.Statement, ...params: any[]): Database.RunResult {
@@ -73,6 +74,43 @@ export class DatabaseService {
             throw err;
         }
     }
+
+    static searchJobs(criteria: Criteria) {
+        const conditions: string[] = [];
+        const params: any[] = [];
+
+        if (criteria.title) {
+            conditions.push(`LOWER(title) LIKE ?`);
+            params.push(`%${criteria.title.toLowerCase()}%`);
+        }
+
+        if (criteria.company) {
+            conditions.push(`LOWER(company) LIKE ?`);
+            params.push(`%${criteria.company.toLowerCase()}%`);
+        }
+
+        if (criteria.location) {
+            conditions.push(`LOWER(location) LIKE ?`);
+            params.push(`%${criteria.location.toLowerCase()}%`);
+        }
+
+        if (criteria.fromDate) {
+            conditions.push(`created_at >= ?`);
+            params.push(`${criteria.fromDate}`);
+            // params.push(criteria.fromDate); // format: 'YYYY-MM-DD'
+        }
+
+        if (criteria.toDate) {
+            conditions.push(`created_at <= ?`);
+            params.push(`${criteria.toDate}`); // format: 'YYYY-MM-DD'
+        }
+
+        const whereClause = conditions.length ? 'WHERE ' + conditions.join(' AND ') : '';
+        const stmt = db.prepare(`SELECT * FROM jobs ${whereClause} ORDER BY score DESC`);
+
+        return stmt.all(params); // for better security and binding
+    }
+
 
     static getKeywordCategories(): KeywordCategory[] {
         try {

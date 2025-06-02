@@ -1,45 +1,142 @@
 <div class="p-4">
   <h2 class="text-2xl font-bold mb-4">Job Results</h2>
 
+  <form (ngSubmit)="search()" class="flex flex-wrap gap-4 items-end mb-6">
+    <input
+      type="text"
+      [(ngModel)]="criteria.title"
+      name="title"
+      placeholder="Title"
+      class="border px-4 py-2 rounded w-48"
+    />
+
+    <input
+      type="text"
+      [(ngModel)]="criteria.company"
+      name="company"
+      placeholder="Company"
+      class="border px-4 py-2 rounded w-48"
+    />
+
+    <input
+      type="text"
+      [(ngModel)]="criteria.location"
+      name="location"
+      placeholder="Location"
+      class="border px-4 py-2 rounded w-48"
+    />
+
+    <input
+      type="date"
+      [(ngModel)]="criteria.fromDate"
+      name="dateFrom"
+      class="border px-3 py-2 rounded w-48"
+    />
+
+    <input
+      type="date"
+      [(ngModel)]="criteria.toDate"
+      name="dateTo"
+      class="border px-3 py-2 rounded w-48"
+    />
+
+    <button
+      type="submit"
+      class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700"
+    >
+      Search
+    </button>
+
+    <button
+      class="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700"
+      (click)="clearSearchCriteria()"
+    >
+      Clear
+    </button>
+  </form>
+
   <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
     <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
       <tr>
-        <th class="py-3 px-4 text-left cursor-pointer" (click)="setSort('title')">
-          Title <span *ngIf="sortField === 'title'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        <th
+          class="py-3 px-4 text-left cursor-pointer"
+          (click)="setSort('title')"
+        >
+          Title
+          <span *ngIf="sortField === 'title'">{{
+            sortDirection === "asc" ? "▲" : "▼"
+          }}</span>
         </th>
-        <th class="py-3 px-4 text-left cursor-pointer" (click)="setSort('company')">
-          Company <span *ngIf="sortField === 'company'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        <th
+          class="py-3 px-4 text-left cursor-pointer"
+          (click)="setSort('company')"
+        >
+          Company
+          <span *ngIf="sortField === 'company'">{{
+            sortDirection === "asc" ? "▲" : "▼"
+          }}</span>
         </th>
-        <th class="py-3 px-4 text-left cursor-pointer" (click)="setSort('location')">
-          Location <span *ngIf="sortField === 'location'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        <th
+          class="py-3 px-4 text-left cursor-pointer"
+          (click)="setSort('location')"
+        >
+          Location
+          <span *ngIf="sortField === 'location'">{{
+            sortDirection === "asc" ? "▲" : "▼"
+          }}</span>
         </th>
-        <th class="py-3 px-4 text-left cursor-pointer" (click)="setSort('score')">
-          Score <span *ngIf="sortField === 'score'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        <th
+          class="py-3 px-4 text-left cursor-pointer"
+          (click)="setSort('score')"
+        >
+          Score
+          <span *ngIf="sortField === 'score'">{{
+            sortDirection === "asc" ? "▲" : "▼"
+          }}</span>
         </th>
-        <th class="py-3 px-4 text-left cursor-pointer" (click)="setSort('postedDate')">
-          Posted <span *ngIf="sortField === 'postedDate'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+        <th
+          class="py-3 px-4 text-left cursor-pointer"
+          (click)="setSort('postedDate')"
+        >
+          Posted
+          <span *ngIf="sortField === 'postedDate'">{{
+            sortDirection === "asc" ? "▲" : "▼"
+          }}</span>
         </th>
         <th class="py-3 px-4 text-left">Link</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let job of paginatedJobs; let i = index" class="border-t hover:bg-gray-50" (click)="showDetail(job)">
-        <td class="py-2 px-4">{{ job.title }}</td>
+      <tr
+        *ngFor="let job of paginatedJobs; let i = index"
+        class="border-t hover:bg-gray-50"
+      >
+        <td class="py-2 px-4" (click)="showDetail(job)">{{ job.title }}</td>
         <td class="py-2 px-4">{{ job.company }}</td>
         <td class="py-2 px-4">{{ job.location }}</td>
-        <td class="py-2 px-4 font-bold text-blue-600">{{ job.score | number: '1.0-2' }}</td>
+        <td class="py-2 px-4 font-bold text-blue-600">
+          {{ job.score | number : "1.0-2" }}
+        </td>
         <td class="py-2 px-4">{{ job.postedDate }}</td>
         <td class="py-2 px-4">
-          <a [href]="job.url" target="_blank" class="text-blue-500 underline">View</a>
+          <a
+            (click)="openExternalLink(job.url)"
+            class="text-blue-600 hover:underline"
+          >
+            View
+          </a>
         </td>
       </tr>
     </tbody>
   </table>
 
-   <!-- Pagination Controls -->
+  <!-- Pagination Controls -->
   <div class="flex justify-center items-center gap-2 mt-6">
-    <button (click)="prevPage()" [disabled]="currentPage === 1"
-            class="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50">
+    <button
+      (click)="prevPage()"
+      [disabled]="currentPage === 1"
+      class="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50"
+    >
       Previous
     </button>
 
@@ -47,8 +144,11 @@
       Page {{ currentPage }} of {{ totalPages }}
     </span>
 
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-            class="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50">
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+      class="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50"
+    >
       Next
     </button>
   </div>

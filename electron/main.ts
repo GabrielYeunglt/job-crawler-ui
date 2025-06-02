@@ -5,6 +5,7 @@ import { CrawlService } from './selenium/services/crawlService';
 import { registerKeywordIpcHandlers } from './ipc/keywords';
 import { registerCrawlIpcHandlers } from './ipc/crawl';
 import { registerWindowHandlers } from './ipc/window';
+import { registerJobIpcHandlers } from './ipc/job';
 
 dotenv.config();
 
@@ -27,4 +28,5 @@ app.whenReady().then(() => {
     registerKeywordIpcHandlers();
     registerCrawlIpcHandlers();
     registerWindowHandlers();
+    registerJobIpcHandlers();
 });

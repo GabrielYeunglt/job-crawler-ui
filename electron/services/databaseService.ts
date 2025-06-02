@@ -50,10 +50,10 @@ export class DatabaseService {
         return this.runInsert(stmt, id, name, weight);
     }
 
-    static getJob(id: string, site: string): Job {
+    static getJob(id: number): Job {
         try {
-            const stmt = db.prepare(`SELECT * FROM jobs WHERE id = ? AND site = ?`);
-            return stmt.get(id, site) as Job;
+            const stmt = db.prepare(`SELECT * FROM jobs WHERE id = ?`);
+            return stmt.get(id) as Job;
         } catch (err) {
             console.error(err)
             throw err;

@@ -4,8 +4,8 @@
   <ul class="hidden md:flex space-x-6">
     <li><a routerLink="/" class="hover:underline">Home</a></li>
     <li><a routerLink="/crawl" class="hover:underline">Crawl</a></li>
+    <li><a routerLink="/job-list" class="hover:underline">Job list</a></li>
     <li><a routerLink="/keyword" class="hover:underline">Keywords</a></li>
-    <!-- <li><a routerLink="/contact" class="hover:underline">Contact</a></li> -->
     <li>
       <button class="hover:underline" (click)="openDevTools()">
         Open DevTools
@@ -38,10 +38,10 @@
   class="md:hidden bg-red-600 text-white px-6 pb-4 space-y-2"
 >
   <a routerLink="/" class="block hover:underline">Home</a>
-  <!-- <a routerLink="/about" class="block hover:underline">About</a> -->
+  <a routerLink="/crawl" class="block hover:underline">Crawl</a>
+  <a routerLink="/job-list" class="block hover:underline">Job list</a>
   <a routerLink="/keyword" class="block hover:underline">Keywords</a>
   <button class="block hover:underline" (click)="openDevTools()">
     Open DevTools
   </button>
-  <!-- <a routerLink="/contact" class="block hover:underline">Contact</a> -->
 </div>

@@ -20,7 +20,7 @@ export class KeywordService {
     }
 
     getTotalWeight(): number {
-        return this.keywordCategories.reduce((sum, cat) => sum + cat.weight, 0);
+        return this.keywordCategories.reduce((sum, cat) => sum + Math.abs(cat.weight), 0);
     }
 
     processJob(job: Job): { score: number, matchedKeyword: Keyword[] } {

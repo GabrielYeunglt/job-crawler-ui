@@ -81,7 +81,7 @@ db.exec(`
 // Create a jobs table if it doesn't exist
 db.exec(`
   CREATE TABLE IF NOT EXISTS jobfeatures (
-    job_id TEXT NOT NULL,
+    job_id INTEGER NOT NULL,
     keyword_id INTEGER NOT NULL,
     PRIMARY KEY (job_id, keyword_id),
     FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,

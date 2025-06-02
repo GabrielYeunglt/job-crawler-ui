@@ -1,6 +1,6 @@
 import { catchError } from 'rxjs';
 import db from '../db';
-import { Job } from '../models/job';
+import { Job, JobKeywordJoin } from '../models/job';
 import Database from 'better-sqlite3';
 import { Keyword, KeywordCategory, KeywordSynonym } from '../models/keyword';
 import { Criteria } from '../models/criteria';
@@ -75,6 +75,25 @@ export class DatabaseService {
         }
     }
 
+    static searchJobFeatures(job_ids: number[]): JobKeywordJoin[] {
+        try {
+            const jobIds = job_ids; // Array of job IDs (e.g., [1, 2, 3, ..., 999])
+            const placeholders = jobIds.map(() => '?').join(', ');
+            const stmt = db.prepare(`
+                    SELECT * 
+                    FROM jobfeatures 
+                    JOIN keywords ON jobfeatures.keyword_id = keywords.id
+                    WHERE jobfeatures.job_id IN (${placeholders})
+                `);
+
+            const keywords = stmt.all(job_ids) as JobKeywordJoin[];
+            return keywords;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    }
+
     static searchJobs(criteria: Criteria) {
         const conditions: string[] = [];
         const params: any[] = [];
@@ -102,15 +121,17 @@ export class DatabaseService {
 
         if (criteria.toDate) {
             conditions.push(`created_at <= ?`);
-            params.push(`${criteria.toDate}`); // format: 'YYYY-MM-DD'
+            params.push(`${criteria.toDate} 23:59:59`); // format: 'YYYY-MM-DD'
         }
 
         const whereClause = conditions.length ? 'WHERE ' + conditions.join(' AND ') : '';
-        const stmt = db.prepare(`SELECT * FROM jobs ${whereClause} ORDER BY score DESC`);
+        const stmt = db.prepare(`SELECT * 
+                                FROM jobs 
+                                ${whereClause} 
+                                ORDER BY score DESC`);
 
         return stmt.all(params); // for better security and binding
     }
-
 
     static getKeywordCategories(): KeywordCategory[] {
         try {
@@ -159,6 +180,7 @@ export class DatabaseService {
             throw err;
         }
     }
+
     static getKeywordSynonyms(keyword_id: number): KeywordSynonym[] {
         try {
             const stmt = db.prepare(`SELECT * FROM keywordsynonyms WHERE keyword_id = ?`);

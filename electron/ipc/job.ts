@@ -16,4 +16,8 @@ export function registerJobIpcHandlers() {
         return DatabaseService.searchJobs(criteria);
     });
 
+    ipcMain.handle('search-job-features', (event, job_ids: number[]) => {
+        return DatabaseService.searchJobFeatures(job_ids);
+    });
+
 }

@@ -103,6 +103,7 @@
             sortDirection === "asc" ? "▲" : "▼"
           }}</span>
         </th>
+        <th class="py-3 px-4 text-left cursor-pointer">Features</th>
         <th class="py-3 px-4 text-left">Link</th>
       </tr>
     </thead>
@@ -118,6 +119,9 @@
           {{ job.score | number : "1.0-2" }}
         </td>
         <td class="py-2 px-4">{{ job.postedDate }}</td>
+        <td class="py-2 px-4">
+          {{ getKeywordsForJob(job.id) }}
+        </td>
         <td class="py-2 px-4">
           <a
             (click)="openExternalLink(job.url)"

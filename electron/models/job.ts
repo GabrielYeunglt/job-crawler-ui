@@ -1,3 +1,5 @@
+import { Keyword } from "./keyword";
+
 export class Job {
     id: number;
     job_id: string;
@@ -34,3 +36,10 @@ export class Job {
         return `${job_id}|${site}`;
     }
 }
+
+export interface JobFeature {
+    job_id: number;
+    keyword_id: number;
+}
+
+export type JobKeywordJoin = JobFeature & Keyword;

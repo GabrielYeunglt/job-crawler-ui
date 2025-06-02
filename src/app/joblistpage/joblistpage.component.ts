@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Job } from '../../../electron/models/job';
+import { Job, JobKeywordJoin } from '../../../electron/models/job';
 import { CommonModule } from '@angular/common';
 import { JobService } from '../services/job.service';
 import { Router } from '@angular/router';
 import { Criteria } from '../../../electron/models/criteria';
 import { FormsModule } from '@angular/forms';
+import { Keyword } from '../../../electron/models/keyword';
 
 @Component({
     selector: 'app-joblistpage',
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class JoblistpageComponent implements OnInit {
     jobs: Job[] = [];
+    jobfeatures: JobKeywordJoin[] = [];
     pageSize = 10;
     currentPage = 1;
     sortField: keyof Job = 'score';
@@ -24,7 +26,11 @@ export class JoblistpageComponent implements OnInit {
     constructor(private jobService: JobService, private router: Router) { }
 
     async ngOnInit() {
-        this.jobs = await this.jobService.getJobs();
+        this.jobs = await this.jobService.searchJobs(this.default_criteria);
+        console.log(this.jobs);
+        const job_ids = this.jobs.map(job => job.id);
+        this.jobfeatures = await this.jobService.searchJobFeatures(job_ids);
+        console.log(this.jobfeatures);
     }
 
     get totalPages(): number {
@@ -101,5 +107,13 @@ export class JoblistpageComponent implements OnInit {
 
     openExternalLink(url: string) {
         window.electron.shell.openExternal(url);
+    }
+
+    getKeywordsForJob(jobId: number): string {
+        const names = this.jobfeatures
+            .filter(f => f.job_id === jobId)
+            .map(f => f.name);
+
+        return names.length ? names.join(', ') : '—';
     }
 }

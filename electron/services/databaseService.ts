@@ -1,6 +1,6 @@
 import { catchError } from 'rxjs';
 import db from '../db';
-import { Job, JobKeywordJoin } from '../models/job';
+import { Job, JobKeywordJoin, JobViewTime } from '../models/job';
 import Database from 'better-sqlite3';
 import { Keyword, KeywordCategory, KeywordSynonym } from '../models/keyword';
 import { Criteria } from '../models/criteria';
@@ -39,6 +39,11 @@ export class DatabaseService {
     static saveKeywordSynonym(keyword_id: number, name: string): Database.RunResult {
         const stmt = db.prepare(`INSERT OR REPLACE INTO keywordsynonyms (keyword_id, name) VALUES (?, ?)`);
         return this.runInsert(stmt, keyword_id, name);
+    }
+
+    static saveJobViewTime(job_id: number): Database.RunResult {
+        const stmt = db.prepare(`INSERT INTO jobviewtimes (job_id, created_at) VALUES (?, ?)`);
+        return this.runInsert(stmt, job_id, this.getDbDate());
     }
 
     static editKeyword(id: number, name: string, type: number, category_id: number): Database.RunResult {
@@ -131,6 +136,25 @@ export class DatabaseService {
                                 ORDER BY score DESC`);
 
         return stmt.all(params); // for better security and binding
+    }
+
+    static searchJobViewTimes(job_ids: number[]): JobViewTime[] {
+        try {
+            const jobIds = job_ids; // Array of job IDs (e.g., [1, 2, 3, ..., 999])
+            const placeholders = jobIds.map(() => '?').join(', ');
+            const stmt = db.prepare(`
+                    SELECT job_id, COUNT(*) AS view_times
+                    FROM jobviewtimes 
+                    WHERE job_id IN (${placeholders})
+                    GROUP BY job_id
+                `);
+
+            const jobviewtimes = stmt.all(job_ids) as JobViewTime[];
+            return jobviewtimes;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
     }
 
     static getKeywordCategories(): KeywordCategory[] {

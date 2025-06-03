@@ -43,3 +43,8 @@ export interface JobFeature {
 }
 
 export type JobKeywordJoin = JobFeature & Keyword;
+
+export interface JobViewTime {
+    job_id: number;
+    view_times: number;
+}

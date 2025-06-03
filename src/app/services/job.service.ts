@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
-import { Job, JobKeywordJoin } from '../../../electron/models/job';
+import { Job, JobKeywordJoin, JobViewTime } from '../../../electron/models/job';
 import { Criteria } from '../../../electron/models/criteria';
 import { Keyword } from '../../../electron/models/keyword';
+import { DatabaseResult } from '../../../electron/models/databaseResult';
 
 @Injectable({
     providedIn: 'root'
 })
 export class JobService extends BaseService {
+
+    async addJobViewTime(job_id: number): Promise<DatabaseResult> {
+        return await this.invoke<DatabaseResult>('add-view-time', job_id) ?? { changes: 0, lastInsertRowid: 0 };
+    }
 
     async getJob(id: number): Promise<Job> {
         return (await this.invoke<Job>('get-job', id)) ?? new Job({});
@@ -23,5 +28,9 @@ export class JobService extends BaseService {
 
     async searchJobFeatures(job_ids: number[]): Promise<JobKeywordJoin[]> {
         return (await this.invoke<JobKeywordJoin[]>('search-job-features', job_ids)) ?? [];
+    }
+
+    async searchJobViewTimes(job_ids: number[]): Promise<JobViewTime[]> {
+        return (await this.invoke<JobViewTime[]>('search-job-view-times', job_ids)) ?? [];
     }
 }

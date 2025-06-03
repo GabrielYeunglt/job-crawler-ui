@@ -89,4 +89,14 @@ db.exec(`
     );
 `);
 
+// Create a job view times table if it doesn't exist
+db.exec(`
+  CREATE TABLE IF NOT EXISTS jobviewtimes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    job_id INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE
+    );
+`);
+
 export default db;

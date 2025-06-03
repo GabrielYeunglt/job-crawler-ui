@@ -55,7 +55,10 @@
     </button>
   </form>
 
-  <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+  <table
+    *ngIf="jobviewtimes.length > 0"
+    class="min-w-full bg-white shadow-md rounded-lg overflow-hidden"
+  >
     <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
       <tr>
         <th
@@ -122,9 +125,9 @@
         <td class="py-2 px-4">
           {{ getKeywordsForJob(job.id) }}
         </td>
-        <td class="py-2 px-4">
+        <td [ngClass]="getRowColor(job.id)" class="py-2 px-4">
           <a
-            (click)="openExternalLink(job.url)"
+            (click)="handleViewClick(job.url, job.id)"
             class="text-blue-600 hover:underline"
           >
             View

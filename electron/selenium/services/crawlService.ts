@@ -5,6 +5,7 @@ import { IndeedSite } from "../pages/indeed/indeedSite";
 import { LinkedinSite } from "../pages/linkedin/linkedinSite";
 import { DatabaseService } from "../../services/databaseService";
 import { Job } from "../../models/job";
+import { iSite } from "../pages/iSite";
 
 export class CrawlService {
     static async runCrawl(keyword: string): Promise<string[]> {
@@ -22,6 +23,32 @@ export class CrawlService {
         } catch (error) {
             console.error('Crawler error:', error);
             return [];
+        } finally {
+            await driver.quit();
+        }
+    }
+
+    static async crawlSite(sitename: string): Promise<void> {
+        const factory = new DriverFactory();
+        const driver: WebDriver = factory.createWebDriver();
+        let site: iSite;
+
+        try {
+            const viewedJobsData = DatabaseService.getRecentJobs();
+            const viewedJobs = this.constructViewedJobsSet(viewedJobsData);
+            switch (sitename.toLowerCase()) {
+                case 'linkedin':
+                    site = new LinkedinSite(driver, sitename, viewedJobs);
+                    break;
+                case 'indeed':
+                    site = new IndeedSite(driver, sitename, viewedJobs);
+                    break;
+                default:
+                    throw new Error(`Unsupported sitename: ${sitename}`);
+            }
+            await site.runPages();
+        } catch (error) {
+            console.error('Crawler error:', error);
         } finally {
             await driver.quit();
         }

@@ -1,24 +1,38 @@
-<div
-  class="min-h-screen bg-gray-50 px-4 py-10 flex items-center justify-center"
->
-  <div class="bg-white shadow rounded-xl p-8 w-full max-w-2xl text-center">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">
-      Job Crawling Dashboard
-    </h1>
+<div class="min-h-screen bg-gray-50 px-4 py-10 flex flex-col items-center space-y-10">
+  <!-- Dashboard Card -->
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-2xl text-center">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Job Crawling Dashboard</h1>
     <p class="text-gray-600 mb-6">
       Start scanning job boards and matching listings against your keyword
       categories. Click the button below to begin crawling.
     </p>
 
-    <app-crawl-button label="Crawl all page"></app-crawl-button>
+    <div class="space-y-4">
+      <app-crawl-button label="Crawl All Pages"></app-crawl-button>
 
-    <button
-      (click)="handleResetJobs()"
-      class="bg-red-600 hover:bg-red-700 text-white"
-      class="px-5 py-2 rounded-lg text-sm font-medium transition"
-      disabled
-    >
-      Reset Jobs table
-    </button>
+      <button
+        (click)="handleResetJobs()"
+        class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition duration-200"
+        disabled
+      >
+        Reset Jobs Table
+      </button>
+    </div>
+  </div>
+
+  <!-- Site Cards Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+    <app-site-card
+      name="LinkedIn"
+      loginUrl="https://www.linkedin.com/login"
+    ></app-site-card>
+    <app-site-card
+      name="Indeed"
+      loginUrl="https://ca.indeed.com"
+    ></app-site-card>
+    <app-site-card
+      name="Glassdoor"
+      loginUrl="https://www.glassdoor.ca/index.htm"
+    ></app-site-card>
   </div>
 </div>

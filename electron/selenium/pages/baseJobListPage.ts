@@ -27,7 +27,6 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
         await this.sleep(2000);
         do {
             await this.extractJobs();
-            break;  // debug
         } while (await this.nextPage());
         for (const job of this.jobList) {
             try {

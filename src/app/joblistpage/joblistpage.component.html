@@ -55,10 +55,7 @@
     </button>
   </form>
 
-  <table
-    *ngIf="jobviewtimes.length > 0"
-    class="min-w-full bg-white shadow-md rounded-lg overflow-hidden"
-  >
+  <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
     <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
       <tr>
         <th
@@ -140,6 +137,14 @@
   <!-- Pagination Controls -->
   <div class="flex justify-center items-center gap-2 mt-6">
     <button
+      (click)="currentPage = 1"
+      [disabled]="currentPage === 1"
+      class="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50"
+    >
+      Top
+    </button>
+
+    <button
       (click)="prevPage()"
       [disabled]="currentPage === 1"
       class="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50"
@@ -148,7 +153,15 @@
     </button>
 
     <span class="text-sm text-gray-600">
-      Page {{ currentPage }} of {{ totalPages }}
+      Page
+      <input
+        type="number"
+        [(ngModel)]="currentPage"
+        class="w-16 border border-gray-300 rounded px-2 py-1 text-center text-sm"
+        min="1"
+        [max]="totalPages"
+      />
+      of {{ totalPages }}
     </span>
 
     <button

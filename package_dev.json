@@ -60,18 +60,13 @@
     "typescript": "~5.7.2",
     "wait-on": "^8.0.3"
   },
-  "main": "dist-electron/main.js",
+  "main": "electron/main.ts",
   "build": {
-    "author": "Gabriel Yeung",
-    "description": "Personal helper for scrapping job openings online",
-    "version": "0.1.0",
     "appId": "com.example.jobcrawler",
     "productName": "Job Crawler",
     "files": [
-      "dist/angular-app/**/*",
-      "dist-electron/**/*",
-      "node_modules/**/*",
-      "package.json"
+      "dist/",
+      "electron/"
     ],
     "directories": {
       "buildResources": "assets"

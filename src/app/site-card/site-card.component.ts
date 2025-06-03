@@ -18,10 +18,6 @@ export class SiteCardComponent {
     }
 
     login(): void {
-        this.openExternalLink(this.loginUrl);
-    }
-
-    openExternalLink(url: string) {
-        window.electron.shell.openExternal(url);
+        this.crawlService.loginSite(this.name);
     }
 }

@@ -4,21 +4,22 @@ import { BaseJobListPage } from "../baseJobListPage";
 
 export class IndeedJobListPage extends BaseJobListPage {
     override getJobIdFromJobElement(jobElement: WebElement): Promise<string> {
-        throw new Error("Method not implemented.");
+        return jobElement.getAttribute('data-jk');
     }
     constructor(driver: WebDriver, siteName: string, viewedJobs: Set<string>) {
         super(driver, siteName, viewedJobs);
         this.jobListXPath = './/div[@data-testid="slider_container"]';
+        this.paginationXPath = './/nav[@aria-label="pagination"]/ul/li/a[@aria-label="%s"]';
     }
     override async extractJobDetail(jobElement: WebElement): Promise<Job> {
         await jobElement.click();
         const job: Job = new Job({
             site: "Indeed",
-            url: await (await this.waitForElement(By.xpath(".//a"))).getAttribute("href"),
-            job_id: this.getJobIdFromUrl(this.url),
-            title: (await (await this.waitForElement(By.xpath(".//a[contains(@class, 'jcs-JobTitle')]"))).getText()).trim(),
-            company: (await (await this.waitForElement(By.xpath(".//span[@data-testid='company-name']"))).getText()).trim(),
-            location: (await (await this.waitForElement(By.xpath(".//div[@data-testid='text-location']"))).getText()).trim(),
+            url: await (await this.waitForNestedElement(jobElement, By.xpath(".//a"))).getAttribute("href"),
+            job_id: await this.getJobIdFromJobElement(jobElement),
+            title: (await (await this.waitForNestedElement(jobElement, By.xpath(".//a[contains(@class, 'jcs-JobTitle')]"))).getText()).trim(),
+            company: (await (await this.waitForNestedElement(jobElement, By.xpath(".//span[@data-testid='company-name']"))).getText()).trim(),
+            location: (await (await this.waitForNestedElement(jobElement, By.xpath(".//div[@data-testid='text-location']"))).getText()).trim(),
             description: (await (await this.waitForElement(By.xpath(".//div[contains(@id, 'jobDescriptionText')]"))).getText()).trim()
         })
         return job;
@@ -27,14 +28,6 @@ export class IndeedJobListPage extends BaseJobListPage {
         return "https://ca.indeed.com/jobs?q=software&l=Toronto%2C+ON&fromage=1&radius=25";
     }
     override getJobIdFromUrl(url: string): string {
-        try {
-            const uri = new URL(url);
-            const queryParams = new URLSearchParams(uri.search);
-            console.log(uri);
-            console.log(queryParams);
-            return queryParams.get('vjk') ?? '';
-        } catch (err) {
-            throw new Error(`Invalid URL: ${err}`);
-        }
+        throw 'Not implemented';
     }
 }

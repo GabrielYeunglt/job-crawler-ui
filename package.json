@@ -1,7 +1,9 @@
 {
   "name": "job-crawler-ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "commonjs",
+  "author": "Gabriel Yeung",
+  "description": "Personal helper for scrapping job openings online",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,11 +12,14 @@
     "test": "ng test",
     "serve:ssr:job-crawler-ui": "node dist/job-crawler-ui/server/server.mjs",
     "build:electron": "tsc -p tsconfig.electron.json",
+    "build:electron:dev": "tsc -p tsconfig.electron.json --watch",
     "electron": "ng build --base-href ./ && npm run build:electron && electron dist-electron/main.js",
+    "electron:dev": "ng build --base-href ./ && npm run build:electron:dev && electron dist-electron/main.js",
     "rebuild": "electron-rebuild",
     "ng:build": "ng build --configuration production",
     "electron:build": "electron-builder",
-    "package": "npm run ng:build && npm run electron:build"
+    "package": "npm run ng:build && npm run electron:build",
+    "dev": "concurrently \"ng serve\" \"npm:build:electron:dev\""
   },
   "private": true,
   "dependencies": {
@@ -62,18 +67,16 @@
   },
   "main": "dist-electron/main.js",
   "build": {
-    "author": "Gabriel Yeung",
-    "description": "Personal helper for scrapping job openings online",
-    "version": "0.1.0",
     "appId": "com.example.jobcrawler",
     "productName": "Job Crawler",
     "files": [
-      "dist/angular-app/**/*",
+      "dist/job-crawler-ui/**/*",
       "dist-electron/**/*",
       "node_modules/**/*",
       "package.json"
     ],
     "directories": {
+      "output": "release",
       "buildResources": "assets"
     },
     "win": {

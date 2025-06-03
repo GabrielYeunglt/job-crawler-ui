@@ -11,9 +11,10 @@ export abstract class BasePage implements IPage {
         this.driver = driver;
     }
 
-    async open(): Promise<void> {
-        console.log(`Accessing: ${this.url}`);
-        await this.driver.get(this.url);
+    async open(url: string = this.url): Promise<void> {
+        console.log(`Accessing: ${url}`);
+        await this.driver.get(url);
+        await this.sleep(2000);
     }
 
     async waitForNestedElement(parent: WebElement, locator: By, timeout = 10000): Promise<WebElement> {
@@ -24,7 +25,7 @@ export abstract class BasePage implements IPage {
             } catch (err) {
                 return false;
             }
-        }, timeout, 'Timed out waiting for nested element');
+        }, timeout, 'Timed out waiting for nested element ' + locator.toString());
         const element = await parent.findElement(locator);
         return element;
     }

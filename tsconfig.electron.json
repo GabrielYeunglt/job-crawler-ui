@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",
-      "module": "commonjs",
-      "outDir": "dist-electron",
-      "rootDir": "electron",
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "strict": true
-    },
-    "include": ["electron/**/*.ts"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "dist-electron",
+    "rootDir": "electron",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["electron/**/*.ts"]
+}

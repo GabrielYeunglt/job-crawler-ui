@@ -29,12 +29,11 @@ export class LinkedinJobListPage extends BaseJobListPage {
         catch (err) {
             console.error(`Could not load job description page: ${err}`);
         }
-        await this.sleep(this.getRandomInt(1000, 2000));
         // console.log(job);
         return job;
     }
     protected override get url(): string {
-        return "https://www.linkedin.com/jobs/search/?f_PP=100761630%2C101788145&f_T=9&f_TPR=r86400&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=DD";
+        return "https://www.linkedin.com/jobs/search/?f_E=3%2C4&f_F=it&f_T=9&f_TPR=r86400&geoId=90009551&keywords=dev&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=DD";
     }
 
     override getJobIdFromUrl(url: string): string {

@@ -12,6 +12,9 @@ export abstract class BaseSite implements iSite {
         this.siteName = siteName;
         this.pages = [];
     }
+    getName(): string {
+        return this.siteName;
+    }
 
     async runPages(): Promise<void> {
         for (const page of this.pages) {

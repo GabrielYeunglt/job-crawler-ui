@@ -24,7 +24,6 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     }
     override async runPageFlow(): Promise<void> {
         await this.open();
-        await this.sleep(2000);
         do {
             await this.extractJobs();
         } while (await this.nextPage());
@@ -44,13 +43,18 @@ export abstract class BaseJobListPage extends BasePage implements iJobListPage {
     async extractJobs(): Promise<void> {
         const jobElementList = await this.getJobElementList();
         for (const jobElement of jobElementList) {
-            await this.scrollTo(jobElement);
-            await this.sleep(100);
+            if (!this.viewedJobs.has(Job.constructKey(await this.getJobIdFromJobElement(jobElement), this.siteName))) {
+                await this.scrollTo(jobElement);
+                await this.sleep(100);
+            }
         }
         for (const jobElement of jobElementList) {
             try {
-                if (!this.viewedJobs.has(Job.constructKey(await this.getJobIdFromJobElement(jobElement), this.siteName))) {
+                const key = Job.constructKey(await this.getJobIdFromJobElement(jobElement), this.siteName);
+                if (!this.viewedJobs.has(key)) {
                     this.jobList.push(await this.extractJobDetail(jobElement));
+                    this.viewedJobs.add(key);
+                    await this.sleep(this.getRandomInt(1000, 2000));
                 }
             }
             catch (err) {

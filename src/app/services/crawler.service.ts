@@ -15,6 +15,10 @@ export class CrawlerService extends BaseService {
         await this.invoke('crawl-site', sitename);
     }
 
+    async loginSite(sitename: string): Promise<void> {
+        await this.invoke('login-site', sitename);
+    }
+
     async resetJobs(): Promise<DatabaseResult> {
         try {
             const result = await this.invoke<DatabaseResult>('reset-jobs');

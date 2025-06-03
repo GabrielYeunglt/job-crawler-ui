@@ -23,6 +23,8 @@ const db = new Database(dbPath);
 // Optional: enforce foreign keys
 db.exec('PRAGMA foreign_keys = ON');
 
+db.exec(`DELETE FROM jobs WHERE site = 'Indeed'`);
+
 // Create a jobs table if it doesn't exist
 db.exec(`
   CREATE TABLE IF NOT EXISTS jobs (

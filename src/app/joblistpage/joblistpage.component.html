@@ -55,6 +55,16 @@
     </button>
   </form>
 
+  <div class="flex items-center space-x-2 text-sm text-gray-700">
+    <input
+      type="checkbox"
+      id="hideSeen"
+      [(ngModel)]="hideSeen"
+      class="form-checkbox h-4 w-4 text-blue-600 transition duration-150"
+    />
+    <label for="hideSeen" class="select-none">Hide viewed jobs</label>
+  </div>
+
   <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
     <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
       <tr>

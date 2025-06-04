@@ -23,6 +23,7 @@ export class JoblistpageComponent implements OnInit {
     sortDirection: 'asc' | 'desc' = 'desc';
     default_criteria: Criteria = { title: '', company: '', location: '', fromDate: this.getDateDaysAgo(1), toDate: this.getDateDaysAgo(0) };
     criteria: Criteria = structuredClone(this.default_criteria);
+    hideSeen: boolean = true;
 
     constructor(private jobService: JobService, private router: Router) { }
 
@@ -31,7 +32,13 @@ export class JoblistpageComponent implements OnInit {
     }
 
     get totalPages(): number {
-        return Math.ceil(this.jobs.length / this.pageSize);
+        let count = this.sortedJobs();
+        if (this.hideSeen) {
+            count = count.filter(job =>
+                !this.jobviewtimes.find(vt => vt.job_id === job.id)
+            );
+        }
+        return Math.ceil(count.length / this.pageSize);
     }
 
     setSort(field: keyof Job) {
@@ -62,9 +69,19 @@ export class JoblistpageComponent implements OnInit {
     }
 
     get paginatedJobs(): Job[] {
-        const sorted = this.sortedJobs();
+        // 1. Start with all jobs
+        let jobs = this.sortedJobs();
+
+        // 2. Filter unseen if required
+        if (this.hideSeen) {
+            jobs = jobs.filter(job =>
+                !this.jobviewtimes.find(vt => vt.job_id === job.id)
+            );
+        }
+
+        // 3. Apply pagination
         const start = (this.currentPage - 1) * this.pageSize;
-        return sorted.slice(start, start + this.pageSize);
+        return jobs.slice(start, start + this.pageSize);
     }
 
     nextPage() {

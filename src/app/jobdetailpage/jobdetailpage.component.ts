@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Job } from '../../../electron/models/job';
 
@@ -10,7 +10,8 @@ import { Job } from '../../../electron/models/job';
     styleUrl: './jobdetailpage.component.scss'
 })
 export class JobdetailpageComponent {
-    job!: Job;
+    @Input() job: Job | null = null;
+    @Output() back = new EventEmitter<void>();
 
     constructor(private router: Router) {
         const nav = this.router.getCurrentNavigation();
@@ -19,5 +20,9 @@ export class JobdetailpageComponent {
 
     openExternalLink(url: string) {
         window.electron.shell.openExternal(url);
+    }
+
+    goBack() {
+        this.back.emit();
     }
 }

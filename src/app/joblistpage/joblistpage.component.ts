@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { Criteria } from '../../../electron/models/criteria';
 import { FormsModule } from '@angular/forms';
 import { Keyword } from '../../../electron/models/keyword';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { JobdetailpageComponent } from "../jobdetailpage/jobdetailpage.component";
 
 @Component({
     selector: 'app-joblistpage',
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, JobdetailpageComponent],
     templateUrl: './joblistpage.component.html',
     styleUrl: './joblistpage.component.scss'
 })
@@ -26,6 +27,15 @@ export class JoblistpageComponent implements OnInit {
     empty_criteria: Criteria = { title: '', company: '', location: '', fromDate: '', toDate: '' };
     criteria: Criteria = structuredClone(this.default_criteria);
     hideSeen: boolean = true;
+    jobToShow$: BehaviorSubject<Job | null> = new BehaviorSubject<Job | null>(null);
+    tableHeaders: { label: string; field: keyof Job; }[] = [
+        { label: 'Title', field: 'title' },
+        { label: 'Company', field: 'company' },
+        { label: 'Location', field: 'location' },
+        { label: 'Score', field: 'score' },
+        { label: 'Created At', field: 'created_at' }
+    ];
+    private previousScrollY = 0;
 
     constructor(private jobService: JobService, private router: Router) { }
 
@@ -42,6 +52,10 @@ export class JoblistpageComponent implements OnInit {
             );
         }
         return Math.ceil(count.length / this.pageSize);
+    }
+
+    get showDetail(): boolean {
+        return this.jobToShow$.value !== null;
     }
 
     setSort(field: keyof Job) {
@@ -99,12 +113,19 @@ export class JoblistpageComponent implements OnInit {
         }
     }
 
-    showDetail(job: Job): void {
+    showDetailEvent(job: Job): void {
         if (job) {
-            this.router.navigate(['/job-detail'], {
-                state: { job: job } // Pass it as a named property
-            });
+            this.previousScrollY = window.scrollY;
+            this.jobToShow$.next(job);
+            // Scroll to top of page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+    }
+    handleBackFromDetail(): void {
+        this.jobToShow$.next(null);
+        // Scroll back to previous position
+        window.scrollTo({ top: this.previousScrollY, behavior: 'smooth' });
+
     }
 
     async search(): Promise<void> {

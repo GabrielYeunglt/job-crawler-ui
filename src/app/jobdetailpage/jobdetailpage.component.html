@@ -1,15 +1,5 @@
-<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-  <div class="mt-6 flex gap-4">
-    <a
-      (click)="openExternalLink(job.url)"
-      class="text-blue-600 hover:underline"
-    >
-      View Job Posting
-    </a>
-    <a routerLink="/job-list" class="text-gray-500 hover:underline"
-      >← Back to list</a
-    >
-  </div>
+<div *ngIf="job" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+  <ng-container *ngTemplateOutlet="actionLinks"></ng-container>
   <h1 class="text-2xl font-bold mb-2 text-gray-800">{{ job.title }}</h1>
   <p class="text-gray-600 mb-1"><strong>Company:</strong> {{ job.company }}</p>
   <p class="text-gray-600 mb-1">
@@ -26,16 +16,19 @@
   <div class="mt-4">
     <p class="text-gray-700 whitespace-pre-line">{{ job.description }}</p>
   </div>
+  <ng-container *ngTemplateOutlet="actionLinks"></ng-container>
 
-  <div class="mt-6 flex gap-4">
-    <a
-      (click)="openExternalLink(job.url)"
-      class="text-blue-600 hover:underline"
-    >
-      View Job Posting
-    </a>
-    <a routerLink="/job-list" class="text-gray-500 hover:underline"
-      >← Back to list</a
-    >
-  </div>
+  <ng-template #actionLinks>
+    <div class="mt-6 flex gap-4">
+      <a
+        (click)="openExternalLink(job.url)"
+        class="text-blue-600 hover:underline"
+      >
+        View Job Posting
+      </a>
+      <a (click)="goBack()" class="text-gray-500 hover:underline"
+        >← Back to list</a
+      >
+    </div>
+  </ng-template>
 </div>

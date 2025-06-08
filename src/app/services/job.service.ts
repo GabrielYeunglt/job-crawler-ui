@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Job, JobKeywordJoin, JobViewTime } from '../../../electron/models/job';
 import { Criteria } from '../../../electron/models/criteria';
-import { Keyword } from '../../../electron/models/keyword';
 import { DatabaseResult } from '../../../electron/models/databaseResult';
 import { BehaviorSubject } from 'rxjs';
 

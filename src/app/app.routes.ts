@@ -8,6 +8,5 @@ export const routes: Routes = [
     { path: 'keyword', loadChildren: () => import('./keyword/keyword.module').then(m => m.KeywordModule) },
     { path: 'crawl', component: CrawlpageComponent },
     { path: 'job-list', component: JoblistpageComponent },
-    { path: 'job-detail', component: JobdetailpageComponent },
     { path: '', component: HomepageComponent },
 ];

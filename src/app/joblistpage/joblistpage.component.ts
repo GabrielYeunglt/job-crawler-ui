@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Criteria } from '../../../electron/models/criteria';
 import { FormsModule } from '@angular/forms';
 import { Keyword } from '../../../electron/models/keyword';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-joblistpage',
@@ -15,19 +16,21 @@ import { Keyword } from '../../../electron/models/keyword';
 })
 export class JoblistpageComponent implements OnInit {
     jobs: Job[] = [];
-    jobfeatures: JobKeywordJoin[] = [];
+    jobFeatures$!: Observable<JobKeywordJoin[]>;
     jobviewtimes: JobViewTime[] = [];
     pageSize = 10;
     currentPage = 1;
     sortField: keyof Job = 'score';
     sortDirection: 'asc' | 'desc' = 'desc';
     default_criteria: Criteria = { title: '', company: '', location: '', fromDate: this.getDateDaysAgo(1), toDate: this.getDateDaysAgo(0) };
+    empty_criteria: Criteria = { title: '', company: '', location: '', fromDate: '', toDate: '' };
     criteria: Criteria = structuredClone(this.default_criteria);
     hideSeen: boolean = true;
 
     constructor(private jobService: JobService, private router: Router) { }
 
     async ngOnInit() {
+        this.jobFeatures$ = this.jobService.jobFeatures$;
         this.search();
     }
 
@@ -107,7 +110,7 @@ export class JoblistpageComponent implements OnInit {
     async search(): Promise<void> {
         this.jobs = await this.jobService.searchJobs(this.criteria);
         const job_ids = this.jobs.map(job => job.id);
-        this.jobfeatures = await this.jobService.searchJobFeatures(job_ids);
+        await this.jobService.searchJobFeatures(job_ids);
         this.jobviewtimes = await this.jobService.searchJobViewTimes(job_ids);
     }
 
@@ -143,6 +146,11 @@ export class JoblistpageComponent implements OnInit {
     }
 
     async clearSearchCriteria(): Promise<void> {
+        this.criteria = structuredClone(this.empty_criteria);
+        await this.jobService.getJobs();
+    }
+
+    async defaultSearchCriteria(): Promise<void> {
         this.criteria = structuredClone(this.default_criteria);
         await this.jobService.getJobs();
     }
@@ -167,11 +175,11 @@ export class JoblistpageComponent implements OnInit {
         }
     }
 
-    getKeywordsForJob(jobId: number): string {
-        const names = this.jobfeatures
+    getFeaturesForJob(jobId: number, features: JobKeywordJoin[]): string {
+        return features
             .filter(f => f.job_id === jobId)
-            .map(f => f.name);
-
-        return names.length ? names.join(', ') : '—';
+            .map(f => f.name)
+            .join(', ');
     }
+
 }

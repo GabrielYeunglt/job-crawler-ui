@@ -48,6 +48,13 @@
     </button>
 
     <button
+      class="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-500"
+      (click)="defaultSearchCriteria()"
+    >
+      Default
+    </button>
+
+    <button
       class="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700"
       (click)="clearSearchCriteria()"
     >
@@ -108,8 +115,8 @@
           class="py-3 px-4 text-left cursor-pointer"
           (click)="setSort('postedDate')"
         >
-          Posted
-          <span *ngIf="sortField === 'postedDate'">{{
+          Created At
+          <span *ngIf="sortField === 'created_at'">{{
             sortDirection === "asc" ? "▲" : "▼"
           }}</span>
         </th>
@@ -128,9 +135,11 @@
         <td class="py-2 px-4 font-bold text-blue-600">
           {{ job.score | number : "1.0-2" }}
         </td>
-        <td class="py-2 px-4">{{ job.postedDate }}</td>
+        <td class="py-2 px-4">{{ job.created_at }}</td>
         <td class="py-2 px-4">
-          {{ getKeywordsForJob(job.id) }}
+          <ng-container *ngIf="jobFeatures$ | async as jobfeatures">
+            {{ getFeaturesForJob(job.id, jobfeatures) }}
+          </ng-container>
         </td>
         <td [ngClass]="getRowColor(job.id)" class="py-2 px-4">
           <a

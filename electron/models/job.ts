@@ -35,7 +35,7 @@ export class Job {
     }
 
     static constructKey(job_id: string, site: string): string {
-        return `${job_id}|${site}`;
+        return `${job_id}|${site}`.toLowerCase();
     }
 }
 

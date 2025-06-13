@@ -5,7 +5,6 @@ import { JobService } from '../services/job.service';
 import { Router } from '@angular/router';
 import { Criteria } from '../../../electron/models/criteria';
 import { FormsModule } from '@angular/forms';
-import { Keyword } from '../../../electron/models/keyword';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { JobdetailpageComponent } from "../jobdetailpage/jobdetailpage.component";
 

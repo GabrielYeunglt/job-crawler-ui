@@ -5,7 +5,7 @@ import { BaseJobListPage } from "../baseJobListPage";
 export class GlassdoorJobListPage extends BaseJobListPage {
     constructor(driver: WebDriver, siteName: string, viewedJobs: Set<string>) {
         super(driver, siteName, viewedJobs);
-        this.jobListXPath = './/ul[@aria-label="Jobs List"]/li';
+        this.jobListXPath = './/ul[@aria-label="Jobs List"]/li[@data-test="jobListing"]';
         this.paginationXPath = './/button[@data-test="load-more"]';
     }
     override getJobIdFromUrl(url: string): string {

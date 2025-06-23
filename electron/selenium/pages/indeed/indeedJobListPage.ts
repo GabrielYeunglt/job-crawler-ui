@@ -3,8 +3,8 @@ import { Job } from "../../../models/job";
 import { BaseJobListPage } from "../baseJobListPage";
 
 export class IndeedJobListPage extends BaseJobListPage {
-    override getJobIdFromJobElement(jobElement: WebElement): Promise<string> {
-        return jobElement.getAttribute('data-jk');
+    override async getJobIdFromJobElement(jobElement: WebElement): Promise<string> {
+        return await (await this.waitForNestedElement(jobElement, By.xpath(".//a"))).getAttribute('data-jk');
     }
     constructor(driver: WebDriver, siteName: string, viewedJobs: Set<string>) {
         super(driver, siteName, viewedJobs);

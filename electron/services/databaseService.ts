@@ -4,6 +4,8 @@ import { Job, JobKeywordJoin, JobViewTime } from '../models/job';
 import Database from 'better-sqlite3';
 import { Keyword, KeywordCategory, KeywordSynonym } from '../models/keyword';
 import { Criteria } from '../models/criteria';
+import { error } from 'selenium-webdriver';
+import { stringify } from 'querystring';
 
 export class DatabaseService {
     private static runInsert(stmt: Database.Statement, ...params: any[]): Database.RunResult {
@@ -15,12 +17,22 @@ export class DatabaseService {
         }
     }
 
-    static manualQuery(query: string): Database.RunResult | any[] {
-        const stmt = db.prepare(query);
-        if (/^\s*select/i.test(query)) {
-            return stmt.all();
-        } else {
-            return stmt.run();
+    static manualQuery(query: string): any | any[] {
+        try {
+            const stmt = db.prepare(query);
+            if (/^\s*select/i.test(query)) {
+                return stmt.all();
+            } else {
+                return stmt.run();
+            }
+        } catch (err: any) {
+            console.error(err);
+            return {
+                name: err.name,
+                message: err.message,
+                code: err.code,
+                stack: err.stack
+            };
         }
     }
 

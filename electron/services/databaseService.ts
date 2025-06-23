@@ -15,9 +15,18 @@ export class DatabaseService {
         }
     }
 
+    static manualQuery(query: string): Database.RunResult | any[] {
+        const stmt = db.prepare(query);
+        if (/^\s*select/i.test(query)) {
+            return stmt.all();
+        } else {
+            return stmt.run();
+        }
+    }
+
     static saveJob(job_id: string, site: string, title: string, company: string, location: string, description: string, postedDate: string, url: string, score: number): Database.RunResult {
         const now = this.getDbDate();
-        const stmt = db.prepare(`INSERT OR REPLACE INTO jobs (job_id, site, title, company, location, description, postedDate, url, score, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+        const stmt = db.prepare(`INSERT INTO jobs (job_id, site, title, company, location, description, postedDate, url, score, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
         return this.runInsert(stmt, job_id, site, title, company, location, description, postedDate, url, score, now);
     }
 

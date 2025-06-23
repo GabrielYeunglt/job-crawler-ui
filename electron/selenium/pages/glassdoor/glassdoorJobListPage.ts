@@ -40,7 +40,7 @@ export class GlassdoorJobListPage extends BaseJobListPage {
         return await jobElement.getAttribute('data-jobid');
     }
     protected override get url(): string {
-        return "https://www.glassdoor.ca/Job/toronto-on-canada-software-jobs-SRCH_IL.0,17_IC2281069_KO18,26.htm?fromAge=1";
+        return "https://www.glassdoor.ca/Job/toronto-on-software-developer-jobs-SRCH_IL.0,10_IC2281069_KO11,29.htm?fromAge=1";
     }
     override async nextPage(): Promise<boolean> {
         try {

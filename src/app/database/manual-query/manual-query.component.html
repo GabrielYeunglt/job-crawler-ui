@@ -1,0 +1,50 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow space-y-6">
+  <h2 class="text-2xl font-bold text-gray-800">SQL Runner</h2>
+
+  <textarea
+    [(ngModel)]="sql"
+    rows="5"
+    class="w-full border border-gray-300 rounded px-4 py-2 text-sm font-mono"
+    placeholder="Enter your SQL query here..."
+  ></textarea>
+
+  <div class="flex gap-4">
+    <button
+      (click)="runQuery()"
+      class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+    >
+      Run
+    </button>
+    <span *ngIf="error" class="text-red-600">{{ error }}</span>
+  </div>
+  <!-- Render as table if it's an array -->
+  <div
+    *ngIf="isResultArray()"
+    class="overflow-auto border border-gray-200 rounded"
+  >
+    <table class="min-w-full text-sm text-left border-collapse">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th *ngFor="let key of getFirstRowKeys()" class="px-4 py-2 border-b">
+            {{ key }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of arrayResult" class="border-t">
+          <td *ngFor="let key of getFirstRowKeys()" class="px-4 py-2">
+            {{ row[key] }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Fallback: JSON view -->
+  <pre
+    *ngIf="!isResultArray()"
+    class="bg-gray-100 text-sm p-4 rounded whitespace-pre-wrap overflow-x-auto"
+    >{{ stringifiedResult }}
+</pre
+  >
+</div>

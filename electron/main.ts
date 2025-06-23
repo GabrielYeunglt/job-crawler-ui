@@ -6,6 +6,7 @@ import { registerKeywordIpcHandlers } from './ipc/keywords';
 import { registerCrawlIpcHandlers } from './ipc/crawl';
 import { registerWindowHandlers } from './ipc/window';
 import { registerJobIpcHandlers } from './ipc/job';
+import { registerDatabaseIpcHandlers } from './ipc/database';
 
 dotenv.config();
 
@@ -32,4 +33,5 @@ app.whenReady().then(() => {
     registerCrawlIpcHandlers();
     registerWindowHandlers();
     registerJobIpcHandlers();
+    registerDatabaseIpcHandlers();
 });

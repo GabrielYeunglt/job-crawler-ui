@@ -38,7 +38,7 @@ export class DatabaseService {
 
     static saveJob(job_id: string, site: string, title: string, company: string, location: string, description: string, postedDate: string, url: string, score: number): Database.RunResult {
         const now = this.getDbDate();
-        const stmt = db.prepare(`INSERT INTO jobs (job_id, site, title, company, location, description, postedDate, url, score, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+        const stmt = db.prepare(`INSERT OR IGNORE INTO jobs (job_id, site, title, company, location, description, postedDate, url, score, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
         return this.runInsert(stmt, job_id, site.toUpperCase(), title, company, location, description, postedDate, url, score, now);
     }
 

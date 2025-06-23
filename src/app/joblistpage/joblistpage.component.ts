@@ -135,7 +135,6 @@ export class JoblistpageComponent implements OnInit {
     }
 
     getRowColor(job_id: number): string {
-        console.log(job_id, this.jobviewtimes);
         const view_time = this.jobviewtimes.find(vt => vt.job_id === job_id)?.view_times ?? 0;
 
         const colorMap: { [key: number]: string } = {

@@ -12,8 +12,4 @@ import { SiteCardComponent } from '../site-card/site-card.component';
 })
 export class CrawlpageComponent {
     constructor(private crawler: CrawlerService) { }
-
-    async handleResetJobs() {
-        const results = await this.crawler.resetJobs();
-    }
 }

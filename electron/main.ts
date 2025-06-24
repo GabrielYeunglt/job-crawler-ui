@@ -22,7 +22,6 @@ async function createWindow() {
 
     // Assumes Angular's built output is at dist/job-crawler-ui/index.html
     win.loadURL(`file://${path.join(__dirname, '../dist/job-crawler-ui/browser/index.html')}`);
-    win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {

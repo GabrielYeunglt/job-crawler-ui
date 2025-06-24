@@ -7,6 +7,7 @@ import { Criteria } from '../../../electron/models/criteria';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { JobdetailpageComponent } from "../jobdetailpage/jobdetailpage.component";
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-joblistpage',
@@ -55,6 +56,10 @@ export class JoblistpageComponent implements OnInit {
 
     get showDetail(): boolean {
         return this.jobToShow$.value !== null;
+    }
+
+    capitalize(str: string): string {
+        return _.capitalize(str);
     }
 
     setSort(field: keyof Job) {

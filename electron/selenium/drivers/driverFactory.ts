@@ -1,13 +1,12 @@
 import { app } from 'electron';
 import path from 'path';
-import { Builder, WebDriver } from 'selenium-webdriver';
+import { Builder, logging, WebDriver } from 'selenium-webdriver';
 import chrome, { Options as ChromeOptions } from 'selenium-webdriver/chrome';
 
 type Browser = 'chrome' | 'firefox';
 
 export class DriverFactory {
     createWebDriver(browser: Browser = 'chrome'): WebDriver {
-        // const userDataDir = path.resolve(__dirname, '../selenium_profile');
         const userDataDir = path.join(app.getPath('userData'), 'selenium_profile');
         const builder = new Builder().forBrowser(browser);
 
@@ -22,13 +21,21 @@ export class DriverFactory {
             const service = new chrome.ServiceBuilder()
                 .enableVerboseLogging();
 
+            const prefs = new logging.Preferences();
+            prefs.setLevel(logging.Type.BROWSER, logging.Level.ALL);
+            prefs.setLevel(logging.Type.DRIVER, logging.Level.ALL);
+
+            builder.setLoggingPrefs(prefs);
+
             builder.setChromeService(service);
             builder.setChromeOptions(options);
         }
 
         try {
             console.log('[DriverFactory] Creating WebDriver...');
-            return builder.build();
+            const driver = builder.build();
+            console.log('[DriverFactory] WebDriver created.');
+            return driver;
         } catch (err) {
             console.error('[DriverFactory] WebDriver build failed:', err);
             throw err;
